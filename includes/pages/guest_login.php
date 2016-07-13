@@ -147,7 +147,7 @@ function guest_register() {
           `Hometown`='" . sql_escape($hometown) . "', 
           `CreateDate`=NOW(), 
           `Sprache`='" . sql_escape($_SESSION["locale"]) . "',
-          `arrival_date`=NULL,
+          `arrival_date`=NULL, 
           `planned_arrival_date`='" . sql_escape($planned_arrival_date) . "'");
       
       // Assign user-group and set password
@@ -178,67 +178,67 @@ function guest_register() {
               div('col-md-6', array(
                   div('row', array(
                       div('col-sm-4', array(
-                          form_text('nick', _("Nick") . ' ' . entry_required(), $nick) 
+                          form_text('nick', _("Nick") . ' ' . entry_required(), $nick)
                       )),
                       div('col-sm-8', array(
                           form_email('mail', _("E-Mail") . ' ' . entry_required(), $mail),
-                          form_checkbox('email_shiftinfo', _("Please send me an email if my shifts change"), $email_shiftinfo) 
-                      )) 
+                          form_checkbox('email_shiftinfo', _("Please send me an email if my shifts change"), $email_shiftinfo)
+                      ))
                   )),
                   div('row', array(
                       div('col-sm-6', array(
-                          form_date('planned_arrival_date', _("Planned date of arrival") . ' ' . entry_required(), $planned_arrival_date, time()) 
+                          form_date('planned_arrival_date', _("Planned date of arrival") . ' ' . entry_required(), $planned_arrival_date, time())
                       )),
                       div('col-sm-6', array(
-                          $enable_tshirt_size ? form_select('tshirt_size', _("Shirt size") . ' ' . entry_required(), $tshirt_sizes, $tshirt_size) : '' 
-                      )) 
+                          $enable_tshirt_size ? form_select('tshirt_size', _("Shirt size") . ' ' . entry_required(), $tshirt_sizes, $tshirt_size) : ''
+                      ))
                   )),
                   div('row', array(
                       div('col-sm-6', array(
-                          form_password('password', _("Password") . ' ' . entry_required()) 
+                          form_password('password', _("Password") . ' ' . entry_required())
                       )),
                       div('col-sm-6', array(
-                          form_password('password2', _("Confirm password") . ' ' . entry_required()) 
-                      )) 
+                          form_password('password2', _("Confirm password") . ' ' . entry_required())
+                      ))
                   )),
-                  form_checkboxes('angel_types', _("What do you want to do?") . sprintf(" (<a href=\"%s\">%s</a>)", page_link_to('angeltypes') . '&action=about', _("Description of job types")), $angel_types, $selected_angel_types),
-                  form_info("", _("Restricted angel types need will be confirmed later by an archangel. You can change your selection in the options section.")) 
+                  form_checkboxes('angel_types', _("What do you want to do?"), $angel_types, $selected_angel_types),
+//                  form_info("", _("Restricted angel types need will be confirmed later by an archangel. You can change your selection in the options section."))
               )),
               div('col-md-6', array(
                   div('row', array(
-                      div('col-sm-4', array(
-                          form_text('dect', _("DECT"), $dect) 
-                      )),
-                      div('col-sm-4', array(
-                          form_text('mobile', _("Mobile"), $mobile) 
-                      )),
-                      div('col-sm-4', array(
-                          form_text('tel', _("Phone"), $tel) 
-                      )) 
-                  )),
-                  form_text('jabber', _("Jabber"), $jabber),
-                  div('row', array(
                       div('col-sm-6', array(
-                          form_text('prename', _("First name"), $prename) 
+                          form_text('dect', _("DECT"), $dect)
                       )),
                       div('col-sm-6', array(
-                          form_text('lastname', _("Last name"), $lastname) 
-                      )) 
-                  )),
-                  div('row', array(
-                      div('col-sm-3', array(
-                          form_text('age', _("Age"), $age) 
+                          form_text('mobile', _("Mobile"), $mobile)
                       )),
-                      div('col-sm-9', array(
-                          form_text('hometown', _("Hometown"), $hometown) 
-                      )) 
+//                      div('col-sm-4', array(
+//                          form_text('tel', _("Phone"), $tel)
+//                      ))
                   )),
-                  form_info(entry_required() . ' = ' . _("Entry required!")) 
-              )) 
+//                  form_text('jabber', _("Jabber"), $jabber),
+                  div('row', array(
+                      div('col-sm-6', array(
+                          form_text('prename', _("First name"), $prename)
+                      )),
+                      div('col-sm-6', array(
+                          form_text('lastname', _("Last name"), $lastname)
+                      ))
+                  )),
+//                  div('row', array(
+//                      div('col-sm-3', array(
+//                          form_text('age', _("Age"), $age)
+//                      )),
+//                      div('col-sm-9', array(
+//                          form_text('hometown', _("Hometown"), $hometown)
+//                      ))
+//                  )),
+                  form_info(entry_required() . ' = ' . _("Entry required!"))
+              ))
           )),
           // form_textarea('comment', _("Did you help at former CCC events and which tasks have you performed then?"), $comment),
-          form_submit('submit', _("Register")) 
-      )) 
+          form_submit('submit', _("Register"))
+      ))
   ));
 }
 
@@ -253,14 +253,14 @@ function guest_logout() {
 
 function guest_login() {
   global $user, $privileges;
-  
+
   $nick = "";
-  
+
   unset($_SESSION['uid']);
-  
+
   if (isset($_REQUEST['submit'])) {
     $ok = true;
-    
+
     if (isset($_REQUEST['nick']) && strlen(User_validate_Nick($_REQUEST['nick'])) > 0) {
       $nick = User_validate_Nick($_REQUEST['nick']);
       $login_user = sql_select("SELECT * FROM `User` WHERE `Nick`='" . sql_escape($nick) . "'");
@@ -283,28 +283,28 @@ function guest_login() {
       $ok = false;
       error(_("Please enter a nickname."));
     }
-    
+
     if ($ok) {
       $_SESSION['uid'] = $login_user['UID'];
       $_SESSION['locale'] = $login_user['Sprache'];
-      
+
       redirect(page_link_to('news'));
     }
   }
-  
+
   if (in_array('register', $privileges)) {
     $register_hint = join('', array(
         '<p>' . _("Please sign up, if you want to help us!") . '</p>',
         buttons(array(
-            button(page_link_to('register'), register_title() . ' &raquo;') 
-        )) 
+            button(page_link_to('register'), register_title() . ' &raquo;')
+        ))
     ));
   } else {
     $register_hint = join('', array(
-        error(_('Registration is disabled.'), true) 
+        error(_('Registration is disabled.'), true)
     ));
   }
-  
+
   return page_with_title(login_title(), array(
       msg(),
       '<div class="row"><div class="col-md-6">',
@@ -313,20 +313,20 @@ function guest_login() {
           form_password('password', _("Password")),
           form_submit('submit', _("Login")),
           buttons(array(
-              button(page_link_to('user_password_recovery'), _("I forgot my password")) 
+              button(page_link_to('user_password_recovery'), _("I forgot my password"))
           )),
-          info(_("Please note: You have to activate cookies!"), true) 
+          info(_("Please note: You have to activate cookies!"), true)
       )),
       '</div>',
       '<div class="col-md-6">',
       '<h2>' . register_title() . '</h2>',
       $register_hint,
-      '<h2>' . _("What can I do?") . '</h2>',
-      '<p>' . _("Please read about the jobs you can do to help us.") . '</p>',
-      buttons(array(
-          button(page_link_to('angeltypes') . '&action=about', _("Teams/Job description") . ' &raquo;') 
-      )),
-      '</div></div>' 
+//      '<h2>' . _("What can I do?") . '</h2>',
+//      '<p>' . _("Please read about the jobs you can do to help us.") . '</p>',
+//      buttons(array(
+//          button(page_link_to('angeltypes') . '&action=about', _("Teams/Job description") . ' &raquo;')
+//      )),
+      '</div></div>'
   ));
 }
 ?>

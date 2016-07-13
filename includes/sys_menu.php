@@ -45,8 +45,8 @@ function header_toolbar() {
     if ($unconfirmed_hint != '')
       $hints[] = $unconfirmed_hint;
     
-    if (! isset($user['planned_departure_date']) || $user['planned_departure_date'] == null)
-      $hints[] = info(_("Please enter your planned date of departure on your settings page to give us a feeling for teardown capacities."), true);
+//    if (! isset($user['planned_departure_date']) || $user['planned_departure_date'] == null)
+//      $hints[] = info(_("Please enter your planned date of departure on your settings page to give us a feeling for teardown capacities."), true);
     
     $driver_license_required = user_driver_license_required_hint();
     if ($driver_license_required != '')
@@ -71,11 +71,11 @@ function header_toolbar() {
       $glyphicon = 'warning-sign';
     }
     
-    if ($user['DECT'] == "") {
-      $hints[] = error(_("You need to specify a DECT phone number in your settings! If you don't have a DECT phone, just enter \"-\"."), true);
-      $hint_class = 'danger';
-      $glyphicon = 'warning-sign';
-    }
+//    if ($user['DECT'] == "") {
+//      $hints[] = error(_("You need to specify a DECT phone number in your settings! If you don't have a DECT phone, just enter \"-\"."), true);
+//      $hint_class = 'danger';
+//      $glyphicon = 'warning-sign';
+//    }
   }
   if (count($hints) > 0)
     $toolbar_items[] = toolbar_popover($glyphicon . ' text-' . $hint_class, '', $hints, 'bg-' . $hint_class);
@@ -103,10 +103,10 @@ function make_navigation() {
   $menu = array();
   $pages = array(
       "news" => news_title(),
-      "user_meetings" => meetings_title(),
+//      "user_meetings" => meetings_title(),
       "user_shifts" => shifts_title(),
-      "angeltypes" => angeltypes_title(),
-      "user_questions" => questions_title() 
+//      "angeltypes" => angeltypes_title(),
+//      "user_questions" => questions_title()
   );
   
   foreach ($pages as $page => $title)
