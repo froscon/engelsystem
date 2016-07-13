@@ -1,0 +1,423 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Engelsystem 2.0\n"
+"POT-Creation-Date: 2016-03-22 14:48+0100\n"
+"PO-Revision-Date: 2016-03-22 14:51+0100\n"
+"Last-Translator: msquare <msquare@notrademark.de>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: /Users/msquare/workspace/projects/engelsystem\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/sys_menu.php:56
+#, php-format
+msgid ""
+"You freeloaded at least %s shifts. Shift signup is locked. Please go to "
+"heavens desk to be unlocked again."
+msgstr ""
+"You freeloaded at least %s shifts. Shift signup is locked. Please go to "
+"helper's desk to be unlocked again."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/sys_menu.php:63
+msgid ""
+"You are not marked as arrived. Please go to heaven's desk, get your angel "
+"badge and/or tell them that you arrived already."
+msgstr ""
+"You are not marked as arrived. Please go to helper's desk, get your angel "
+"badge and/or tell them that you arrived already."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/angeltypes_controller.php:7
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_shifts.php:821
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:56
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:73
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/User_view.php:214
+msgid "Angeltypes"
+msgstr "Helper types"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/angeltypes_controller.php:81
+#, php-format
+msgid "Angeltype %s deleted."
+msgstr "Helper type %s gelöscht."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/angeltypes_controller.php:86
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:44
+#, php-format
+msgid "Delete angeltype %s"
+msgstr "Delete helper type %s"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:19
+#, php-format
+msgid "There is %d unconfirmed angeltype."
+msgid_plural "There are %d unconfirmed angeltypes."
+msgstr[0] "There is %d unconfirmed helper type."
+msgstr[1] "There are %d unconfirmed helper types."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:19
+msgid "Angel types which need approvals:"
+msgstr "Helper types which need approvals:"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:29
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:37
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:69
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:77
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:133
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:189
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:259
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:296
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:304
+msgid "Angeltype doesn't exist."
+msgstr "Helper type doesn't exist."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:42
+msgid "You are not allowed to delete all users for this angeltype."
+msgstr "You are not allowed to delete all users for this helper type."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:52
+#, php-format
+msgid "Denied all users for angeltype %s."
+msgstr "Denied all users for helper type %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:85
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:117
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:125
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:173
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:181
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:236
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:251
+msgid "User angeltype doesn't exist."
+msgstr "User helper type doesn't exist."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:90
+msgid "You are not allowed to confirm all users for this angeltype."
+msgstr "You are not allowed to confirm all users for this helper type."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:100
+#, php-format
+msgid "Confirmed all users for angeltype %s."
+msgstr "Confirmed all users for helper type %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:138
+msgid "You are not allowed to confirm this users angeltype."
+msgstr "You are not allowed to confirm this users helper type."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:156
+#, php-format
+msgid "%s confirmed for angeltype %s."
+msgstr "%s confirmed for helper type %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:161
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/UserAngelTypes_view.php:36
+msgid "Confirm angeltype for user"
+msgstr "Confirm helper type for user"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:202
+msgid "You are not allowed to delete this users angeltype."
+msgstr "You are not allowed to delete this users helper type."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:219
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/UserAngelTypes_view.php:47
+msgid "Remove angeltype"
+msgstr "Remove helper type"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_angeltypes_controller.php:349
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/UserAngelTypes_view.php:62
+msgid "Add user to angeltype"
+msgstr "Add user to helper type"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/controller/user_driver_licenses_controller.php:24
+#, php-format
+msgid ""
+"You joined an angeltype which requires a driving license. Please edit your "
+"driving license information here: %s."
+msgstr ""
+"You joined an helper type which requires a driving license. Please edit your "
+"driving license information here: %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/helper/email_helper.php:11
+msgid "here is a message for you from the engelsystem:"
+msgstr "here is a message for you from the helper system:"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/helper/email_helper.php:11
+msgid ""
+"This email is autogenerated and has not to be signed. You got this email "
+"because you are registered in the engelsystem."
+msgstr ""
+"This email is autogenerated and has not to be signed. You got this email "
+"because you are registered in the helper system."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/mailer/users_mailer.php:7
+msgid ""
+"Your angelsystem account has been deleted. If you have any questions "
+"regarding your account deletion, please contact heaven."
+msgstr ""
+"Your helpersystem account has been deleted. If you have any questions "
+"regarding your account deletion, please contact heaven."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:4
+msgid "Active angels"
+msgstr "Active helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:28
+#, php-format
+msgid ""
+"At least %s angels are forced to be active. The number has to be greater."
+msgstr ""
+"At least %s helpers are forced to be active. The number has to be greater."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:33
+msgid "Please enter a number of angels to be marked as active."
+msgstr "Please enter a number of helpers to be marked as active."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:57
+msgid "Marked angels."
+msgstr "Marked helpers."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:69
+msgid "Angel has been marked as active."
+msgstr "Helper has been marked as active."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:71
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:80
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:98
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_arrive.php:22
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_arrive.php:32
+msgid "Angel not found."
+msgstr "Helper not found."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:78
+msgid "Angel has been marked as not active."
+msgstr "Helper has been marked as not active."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:87
+msgid "Angel has got a t-shirt."
+msgstr "Helper has got a t-shirt."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:96
+msgid "Angel has got no t-shirt."
+msgstr "Helper has got no t-shirt."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:166
+msgid "Search angel:"
+msgstr "Search helper:"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_active.php:171
+msgid "How much angels should be active?"
+msgstr "How much helpers should be active?"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_arrive.php:4
+msgid "Arrived angels"
+msgstr "Arrived helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_arrive.php:19
+msgid "Reset done. Angel has not arrived."
+msgstr "Reset done. Helper has not arrived."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_arrive.php:29
+msgid "Angel has been marked as arrived."
+msgstr "Helper has been marked as arrived."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_free.php:3
+msgid "Free angels"
+msgstr "Free helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_free.php:74
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/ShiftTypes_view.php:34
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/UserAngelTypes_view.php:68
+msgid "Angeltype"
+msgstr "Helper type"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_rooms.php:89
+#, php-format
+msgid "Please enter needed angels for type %s."
+msgstr "Please enter needed helpers for type %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_rooms.php:143
+msgid "Needed angels:"
+msgstr "Needed helpers:"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:122
+#, php-format
+msgid "Please check the needed angels for team %s."
+msgstr "Please check the needed helpers for team %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:127
+msgid "There are 0 angels needed. Please enter the amounts of needed angels."
+msgstr "There are 0 helpers needed. Please enter the amounts of needed helpers."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:131
+msgid "Please select a mode for needed angels."
+msgstr "Please select a mode for needed helpers."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:135
+msgid "Please select needed angels."
+msgstr "Please select needed helpers."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:255
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:316
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_shifts.php:189
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/Shifts_view.php:110
+msgid "Needed angels"
+msgstr "Needed helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:317
+msgid "Take needed angels from room settings"
+msgstr "Take needed helpers from room settings"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_shifts.php:318
+msgid "The following angels are needed"
+msgstr "The following helpers are needed"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_user.php:4
+msgid "All Angels"
+msgstr "All Helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/admin_user.php:79
+msgid ""
+"Please visit the angeltypes page or the users profile to manage users "
+"angeltypes."
+msgstr ""
+"Please visit the angeltypes page or the users profile to manage users "
+"helper types."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/guest_login.php:166
+msgid "Angel registration successful!"
+msgstr "Helper registration successful!"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/guest_login.php:173
+msgid ""
+"By completing this form you're registering as a Chaos-Angel. This script "
+"will create you an account in the angel task sheduler."
+msgstr ""
+"By completing this form you're registering as a FrOSCon helper. This script "
+"will create you an account in the helper task sheduler."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/guest_login.php:205
+msgid ""
+"Restricted angel types need will be confirmed later by an archangel. You can "
+"change your selection in the options section."
+msgstr ""
+"Restricted helper types need will be confirmed later. You can "
+"change your selection in the options section."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_messages.php:72
+#, php-format
+msgid "Hello %s, here can you leave messages for other angels"
+msgstr "Hello %s, here can you leave messages for other helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_questions.php:3
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/Questions_view.php:29
+msgid "Ask an archangel"
+msgstr "Ask a coordinator"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_settings.php:182
+msgid "Please visit the angeltypes page to manage your angeltypes."
+msgstr "Please visit the helper types page to manage your helper types."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_shifts.php:144
+#, php-format
+msgid "Please check your input for needed angels of type %s."
+msgstr "Please check your input for needed helpers of type %s."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_shifts.php:366
+msgid ""
+"The administration has not configured any angeltypes yet - or you are not "
+"subscribed to any angeltype."
+msgstr ""
+"The administration has not configured any helper types yet - or you are not "
+"subscribed to any helper type."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_shifts.php:661
+#: /Users/msquare/workspace/projects/engelsystem/includes/pages/user_shifts.php:795
+msgid "Add more angels"
+msgstr "Add more helpers"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:45
+#, php-format
+msgid "Do you want to delete angeltype %s?"
+msgstr "Do you want to delete helper type %s?"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:63
+msgid ""
+"Restricted angel types can only be used by an angel if enabled by an "
+"archangel (double opt-in)."
+msgstr ""
+"Restricted helper types can only be used by an helper if enabled by an "
+"coordinator (double opt-in)."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:83
+msgid ""
+"This angeltype requires a driver license. Please enter your driver license "
+"information!"
+msgstr ""
+"This helper type requires a driver license. Please enter your driver license "
+"information!"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:86
+#, php-format
+msgid ""
+"You are unconfirmed for this angeltype. Please go to the introduction for %s "
+"to get confirmed."
+msgstr ""
+"You are unconfirmed for this helper type. Please go to the introduction for %s "
+"to get confirmed."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:212
+msgid "New angeltype"
+msgstr "New helper type"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/AngelTypes_view.php:251
+msgid ""
+"This angeltype is restricted by double-opt-in by a team coordinator. Please "
+"show up at the according introduction meetings."
+msgstr ""
+"This helper type is restricted by double-opt-in by a team coordinator. Please "
+"show up at the according introduction meetings."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/ShiftEntry_view.php:26
+msgid "Angel:"
+msgstr "Helper:"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/User_view.php:48
+#, fuzzy, php-format
+msgid "Angel should receive at least  %d vouchers."
+msgstr "Helper should receive at least  %d vouchers."
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/UserDriverLicenses_view.php:22
+msgid "I am willing to operate cars for the PL"
+msgstr "I am willing to operate cars for the FrOSCon Orga"
+
+#: /Users/msquare/workspace/projects/engelsystem/includes/view/UserDriverLicenses_view.php:25
+msgid ""
+"I have my own car with me and am willing to use it for the PL (You'll get "
+"reimbursed for fuel)"
+msgstr ""
+"I have my own car with me and am willing to use it for the FrOSCon Orga (You'll get "
+"reimbursed for fuel)"
+
+#~ msgid "You are not confirmed for this angel type."
+#~ msgstr "You are not confirmed for this helper type."
+
+#~ msgid "Add new angeltype"
+#~ msgstr "Add new helper type"
+
+#~ msgid ""
+#~ "Hello %s, here you can register for a wake-up call. Simply say when and "
+#~ "where the angel should come to wake you."
+#~ msgstr ""
+#~ "Hello %s, here you can register for a wake-up call. Simply say when and "
+#~ "where the helper should come to wake you."
+
+#~ msgid ""
+#~ "Resistance is futile! Your biological and physical parameters will be "
+#~ "added to our collectiv! Assimilating angel:"
+#~ msgstr ""
+#~ "Resistance is futile! Your biological and physical parameters will be "
+#~ "added to our collectiv! Assimilating helper:"
