@@ -10,7 +10,7 @@ $faq_url = "https://events.ccc.de/congress/2013/wiki/Static:Volunteers";
 $contact_email = "mailto:erzengel@lists.ccc.de";
 
 // Default-Theme auf der Startseite, 1=style1.css usw.
-$default_theme = 1;
+$default_theme = 0;
 
 // Anzahl der News, die auf einer Seite ausgeben werden koennen...
 $DISPLAY_NEWS = 6;
@@ -27,7 +27,7 @@ $LETZTES_AUSTRAGEN = 3;
 // define('CRYPT_ALG', '$5$rounds=5000'); // SHA-256
 define('CRYPT_ALG', '$6$rounds=5000'); // SHA-512
 
-define('MIN_PASSWORD_LENGTH', 8);
+define('MIN_PASSWORD_LENGTH', 6);
 
 // Wenn Engel beim Registrieren oder in ihrem Profil eine T-Shirt Größe angeben sollen, auf true setzen:
 $enable_tshirt_size = true;
@@ -47,7 +47,7 @@ $shift_sum_formula = "SUM(
   ))*(`Shifts`.`end` - `Shifts`.`start`)*(1 - 3 * `ShiftEntry`.`freeloaded`)
 )";
 
-// voucher calculation 
+// voucher calculation
 $voucher_settings = array(
 	"initial_vouchers" => 2,
 	"shifts_per_voucher" => 1
@@ -64,6 +64,6 @@ $config = array(
     'host' => "localhost",
     'user' => "root",
     'pw' => "",
-    'db' => "engelsystem" 
+    'db' => "engelsystem"
 );
 ?>
