@@ -558,6 +558,22 @@ function AngelTypes_about_view_angeltype($angeltype)
     return $html;
 }
 
+function ShiftType_view_as_angeltype($shifttype) {
+  $angeltype = null;
+  if ($shifttype['angeltype_id'] != null) {
+    $angeltype = AngelType($shifttype['angeltype_id']);
+  }
+  $parsedown = new Parsedown();
+  $title = $shifttype['name'];
+  if ($angeltype) {
+    $title .= ' <small>' . sprintf(_('for team %s'), $angeltype['name']) . '</small>';
+  }
+  $html = '<h3>' . $title . '</h3>';
+  $html .= '<div class="well">' . $parsedown->parse($shifttype['description']) . '</div>';
+  $html .= '<hr />';
+  return $html;
+}
+
 /**
  * Renders a site that contains every angeltype and its description, basically as an overview of the needed help types.
  *
@@ -591,9 +607,13 @@ function AngelTypes_about_view($angeltypes, $user_logged_in)
         '<p>' . _('Here is the list of teams and their tasks. If you have questions, read the FAQ.') . '</p>',
         '<hr />'
     ];
-    foreach ($angeltypes as $angeltype) {
-        $content[] = AngelTypes_about_view_angeltype($angeltype);
-    }
+  foreach ($angeltypes as $angeltype) {
+    $content[] = AngelTypes_about_view_angeltype($angeltype);
+  }
+  $content[] = '<h2>' . _('Shifttypes') . '</h2>';
+  foreach (ShiftTypes() as $shifttype) {
+    $content[] = ShiftType_view_as_angeltype($shifttype);
+  }
 
     return page_with_title(_('Teams/Job description'), $content);
 }
