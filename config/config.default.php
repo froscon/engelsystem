@@ -65,7 +65,7 @@ return [
     //  SHA-512     '$6$rounds=5000'
     'crypt_alg'               => '$6$rounds=5000',
 
-    'min_password_length'     => 8,
+    'min_password_length'     => 6,
 
     // Wenn Engel beim Registrieren oder in ihrem Profil eine T-Shirt Größe angeben sollen, auf true setzen:
     'enable_tshirt_size'      => true,
