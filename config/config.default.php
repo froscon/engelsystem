@@ -30,7 +30,7 @@ return [
     'no_reply_email'          => 'noreply@engelsystem.de',
 
     // Default theme, 1=style1.css
-    'theme'                   => 1,
+    'theme'                   => 0,
 
     // Available themes
     'available_themes'        => [
