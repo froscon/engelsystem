@@ -9,6 +9,12 @@ namespace Engelsystem;
  */
 class ShiftsFilter
 {
+
+    /**
+     * How long can the time interval be?
+     */
+    const MAX_DURATION = 7*86400;
+
     /**
      * Shift is completely full.
      */
