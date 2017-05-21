@@ -607,13 +607,18 @@ function AngelTypes_about_view($angeltypes, $user_logged_in)
         '<p>' . _('Here is the list of teams and their tasks. If you have questions, read the FAQ.') . '</p>',
         '<hr />'
     ];
-  foreach ($angeltypes as $angeltype) {
-    $content[] = AngelTypes_about_view_angeltype($angeltype);
-  }
   $content[] = '<h2>' . _('Shifttypes') . '</h2>';
   foreach (ShiftTypes() as $shifttype) {
     $content[] = ShiftType_view_as_angeltype($shifttype);
   }
+
+  $content[] = '<h2>' . _('Angeltypes') . '</h2>';
+  foreach ($angeltypes as $angeltype) {
+    $content[] = AngelTypes_about_view_angeltype($angeltype);
+  }
+  
+  return page_with_title(_("Teams/Job description"), $content);
+}
 
     return page_with_title(_('Teams/Job description'), $content);
 }
