@@ -53,7 +53,7 @@ function update_ShiftsFilter_timerange(ShiftsFilter $shiftsFilter, $days)
 
     $end_time = $shiftsFilter->getEndTime();
     if ($end_time == null) {
-        $end_time = $start_time + 24 * 60 * 60;
+        $end_time = $start_time + ShiftsFilter::MAX_DURATION;
     }
 
     $shiftsFilter->setStartTime(check_request_datetime(
@@ -70,7 +70,7 @@ function update_ShiftsFilter_timerange(ShiftsFilter $shiftsFilter, $days)
     ));
 
     if ($shiftsFilter->getStartTime() > $shiftsFilter->getEndTime()) {
-        $shiftsFilter->setEndTime($shiftsFilter->getStartTime() + 24 * 60 * 60);
+        $shiftsFilter->setEndTime($shiftsFilter->getStartTime() + ShiftsFilter::MAX_DURATION);
     }
 }
 
