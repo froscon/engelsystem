@@ -38,6 +38,7 @@ sed -i "/^msgstr/s/${DELIM}Angeltype/\1Volunteer type/g" $FILE
 sed -i "/^msgstr/s/${DELIM}AngelType/\1Volunteer Type/g" $FILE
 
 sed -i "/^msgstr/s/${DELIM}angelsystem/\1volunteer system/g" $FILE
+sed -i "/^msgstr/s/${DELIM}engelsystem/\1volunteer system/g" $FILE
 
 sed -i "/^msgstr/s/${DELIM}heaven/\1Helper-GURU/g" $FILE
 sed -i "/^msgstr/s/${DELIM}Heaven/\1Helper-GURU/g" $FILE
