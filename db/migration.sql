@@ -16,7 +16,7 @@ WHERE Name = '2-Engel'
 
 INSERT INTO EventConfig
 VALUES (
-	'FrOSCon 2017',
+	'FrOSCon 2018',
 --	UNIX_TIMESTAMP('2017-08-18'),
 --	UNIX_TIMESTAMP('2017-08-19'),
 --	UNIX_TIMESTAMP('2017-08-20'),
@@ -29,31 +29,27 @@ VALUES (
 );
 
 INSERT INTO AngelTypes
-	SELECT *,0,1,'','',''
-	FROM helfer_2016.AngelTypes
-;
-INSERT INTO AngelTypes (name,restricted,description) VALUES
-	('Sani', 1, 'Helfer für Sanitäter / Volunteer for rescue team'),
-	('PoC', 1, 'Helfer für das PoC / Volunteer for PoC')
+	SELECT *
+	FROM helfer_2017.AngelTypes
 ;
 
 INSERT INTO Room
-	SELECT * FROM helfer_2016.Room
+	SELECT RID, Name, FromPentabarf, '', Name FROM helfer_2017.Room
 	WHERE FromPentabarf != 'Y'
 ;
 INSERT INTO ShiftTypes
-	SELECT * FROM helfer_2016.ShiftTypes
+	SELECT * FROM helfer_2017.ShiftTypes
 ;
 
 INSERT INTO Shifts
-	SELECT S.* FROM helfer_2016.Shifts AS S
-	INNER JOIN helfer_2016.Room AS R USING(RID)
+	SELECT S.* FROM helfer_2017.Shifts AS S
+	INNER JOIN helfer_2017.Room AS R USING(RID)
 	WHERE R.FromPentabarf != 'Y' AND S.title NOT LIKE '%recruiting%'
 ;
-UPDATE Shifts SET edited_by_user_id = 1, start = start + 31449600, end = end + 31449600 ;
+UPDATE Shifts SET edited_by_user_id = 1, start = start + 32054400, end = end + 32054400 ;
 
 INSERT INTO NeededAngelTypes
-	SELECT N.* FROM helfer_2016.NeededAngelTypes AS N
+	SELECT N.* FROM helfer_2017.NeededAngelTypes AS N
 	LEFT JOIN Room AS R ON (room_id=RID)
 	LEFT JOIN Shifts AS S ON (shift_id=SID)
 	WHERE R.RID IS NOT NULL OR S.SID IS NOT NULL
