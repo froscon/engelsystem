@@ -21,7 +21,8 @@ $free_pages = [
     'users',
     'user_driver_licenses',
     'user_password_recovery',
-    'user_worklog'
+    'user_worklog',
+    'next_partial_shifts'
 ];
 
 // Gewünschte Seite/Funktion
@@ -196,6 +197,14 @@ if (
         case 'admin_log':
             $title = admin_log_title();
             $content = admin_log();
+            break;
+        case 'admin_export_emails':
+            $title = admin_export_emails_title();
+            $content = admin_export_emails();
+            break;
+        case 'next_partial_shifts':
+            $title = next_partial_shifts_title();
+            $content = next_partial_shifts();
             break;
         case 'credits':
             require_once realpath(__DIR__ . '/../includes/pages/guest_credits.php');
