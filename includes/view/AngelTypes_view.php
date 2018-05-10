@@ -619,6 +619,3 @@ function AngelTypes_about_view($angeltypes, $user_logged_in)
   
   return page_with_title(_("Teams/Job description"), $content);
 }
-
-    return page_with_title(_('Teams/Job description'), $content);
-}
