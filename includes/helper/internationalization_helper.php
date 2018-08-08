@@ -53,7 +53,8 @@ function gettext_locale($locale = null)
     }
 
     putenv('LC_ALL=' . $locale);
-    setlocale(LC_ALL, $locale);
+    putenv('LANGUAGE=' . $locale);
+    setlocale(LC_ALL, "");
 }
 
 /**
