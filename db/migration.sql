@@ -17,14 +17,10 @@ WHERE Name = '2-Engel'
 INSERT INTO EventConfig
 VALUES (
 	'FrOSCon 2018',
---	UNIX_TIMESTAMP('2017-08-18'),
---	UNIX_TIMESTAMP('2017-08-19'),
---	UNIX_TIMESTAMP('2017-08-20'),
---	UNIX_TIMESTAMP('2017-08-20'),
-	NULL,
-	NULL,
-	NULL,
-	NULL,
+	UNIX_TIMESTAMP('2018-08-24'),
+	UNIX_TIMESTAMP('2018-08-25'),
+	UNIX_TIMESTAMP('2018-08-26'),
+	UNIX_TIMESTAMP('2018-08-26'),
 	'Welcome to FrOSCon'
 );
 
@@ -33,8 +29,8 @@ INSERT INTO AngelTypes
 	FROM helfer_2017.AngelTypes
 ;
 
-INSERT INTO Room
-	SELECT RID, Name, FromPentabarf, '', Name FROM helfer_2017.Room
+INSERT INTO Room (RID, Name, from_frab, description)
+	SELECT RID, Name, FromPentabarf, Name FROM helfer_2017.Room
 	WHERE FromPentabarf != 'Y'
 ;
 INSERT INTO ShiftTypes
