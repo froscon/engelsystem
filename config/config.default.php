@@ -18,7 +18,7 @@ return [
     'maintenance'             => (bool)env('MAINTENANCE', false),
 
     // Application name (not the event name!)
-    'app_name'                => env('APP_NAME', 'Engelsystem'),
+    'app_name'                => env('APP_NAME', 'Helfersystem'),
 
     // Set to development to enable debugging messages
     'environment'             => env('ENVIRONMENT', 'production'),
