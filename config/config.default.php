@@ -323,7 +323,7 @@ return [
     // Shifts overview
     // Set max number of hours that can be shown at once
     // 0 means no limit
-    'filter_max_duration'     => env('FILTER_MAX_DURATION', 0),
+    'filter_max_duration'     => env('FILTER_MAX_DURATION', 7*24),
 
     // Session config
     'session'                 => [
