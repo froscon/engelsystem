@@ -157,7 +157,7 @@ return [
     'password_algorithm'      => PASSWORD_DEFAULT,
 
     // The minimum length for passwords
-    'min_password_length'     => env('PASSWORD_MINIMUM_LENGTH', 8),
+    'min_password_length'     => env('PASSWORD_MINIMUM_LENGTH', 6),
 
     // Whether the DECT field should be enabled
     'enable_dect'             => (bool)env('ENABLE_DECT', true),
