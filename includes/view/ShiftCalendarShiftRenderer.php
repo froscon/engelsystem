@@ -56,7 +56,6 @@ class ShiftCalendarShiftRenderer
                         $this->renderShiftHead($shift, $class, $shift_signup_state->getFreeEntries()),
                         div('card-body ' . $this->classBg(), [
                             $info_text,
-                            Room_name_render($room)
                         ]),
                         $shifts_row
                     ]
