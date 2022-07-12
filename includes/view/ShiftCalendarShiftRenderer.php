@@ -53,7 +53,6 @@ class ShiftCalendarShiftRenderer
                         $this->renderShiftHead($shift, $class, $shift_signup_state->getFreeEntries()),
                         div('panel-body', [
                             $info_text,
-                            Room_name_render($room)
                         ]),
                         $shifts_row
                     ]
