@@ -38,7 +38,7 @@ return [
         'FAQ'     => env('FAQ_URL', '/faq'),
 
         // Contact email address, linked on every page
-        'Contact' => env('CONTACT_EMAIL', 'mailto:ticket@c3heaven.de'),
+        'Contact' => env('CONTACT_EMAIL', 'mailto:helfer@froscon.de'),
     ],
 
     // Text displayed on the FAQ page, rendered as markdown
