@@ -204,7 +204,7 @@ return [
     ],
 
     // The default locale to use
-    'default_locale'          => env('DEFAULT_LOCALE', 'en_US'),
+    'default_locale'          => env('DEFAULT_LOCALE', 'de_DE'),
 
     // Available T-Shirt sizes, set value to null if not available
     'tshirt_sizes'            => [
