@@ -182,7 +182,7 @@ return [
 
     // Multiply 'night shifts' and freeloaded shifts (start or end between 2 and 6 exclusive) by 2
     'night_shifts'            => [
-        'enabled'    => (bool)env('NIGHT_SHIFTS', true), // Disable to weigh every shift the same
+        'enabled'    => (bool)env('NIGHT_SHIFTS', false), // Disable to weigh every shift the same
         'start'      => env('NIGHT_SHIFTS_START', 2),
         'end'        => env('NIGHT_SHIFTS_END', 6),
         'multiplier' => env('NIGHT_SHIFTS_MULTIPLIER', 2),
