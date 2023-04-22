@@ -54,6 +54,25 @@ body {
   margin: 0px 6px 0px 0px;
 }
 
+.shift .list-group .list-group-item span a .icon-icon_angel:before {
+  background-size: 0px;
+  width: 0px;
+  height: 0px;
+  margin: 0px;
+}
+
+.shift .panel-heading {
+  padding: 5px 15px;
+}
+
+.shift .panel-body {
+  padding: 2px 10px;
+  max-height: 40px;
+}
+.shift .list-group-item {
+  padding: 5px 15px;
+}
+
 .footer a {
   color: $text-muted;
 }
