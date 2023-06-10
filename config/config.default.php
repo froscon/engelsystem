@@ -6,9 +6,9 @@ return [
     // MySQL-Connection Settings
     'database'                => [
         'host'     => env('MYSQL_HOST', (env('CI', false) ? 'mariadb' : 'localhost')),
-        'database' => env('MYSQL_DATABASE', 'engelsystem'),
-        'username' => env('MYSQL_USER', 'root'),
-        'password' => env('MYSQL_PASSWORD', ''),
+        'database' => env('MYSQL_DATABASE', 'helfer'),
+        'username' => env('MYSQL_USER', 'helfersystem'),
+        'password' => env('MYSQL_PASSWORD', 'Pae0yieLaegaerei2aizayahn9eezuf9eibe'),
     ],
 
     // For accessing stats
@@ -24,7 +24,7 @@ return [
     'environment'             => env('ENVIRONMENT', 'production'),
 
     // Application URL and base path to use instead of the auto detected one
-    'url'                     => env('APP_URL', null),
+    'url'                     => env('APP_URL', 'https://helfer.froscon.org'),
 
     // Header links
     // Available link placeholders: %lang%
