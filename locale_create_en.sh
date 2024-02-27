@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Creating resources/lang/en_US/default.po"
 
@@ -8,7 +8,7 @@ function pyexec() {
 
 mkdir -p resources/lang/en_US/
 
-find includes/ -iname "*.php" | xargs xgettext --from-code=UTF-8 -o resources/lang/en_US/default.po --width=1000000
+find includes/ -iname "*.php" | xargs xgettext -k__ --from-code=UTF-8 -o resources/lang/en_US/default.po --width=1000000 --join-existing
 
 pyexec <<END
 import re
@@ -26,7 +26,7 @@ open("resources/lang/en_US/default.po", 'w').write(input)
 END
 
 DELIM="\([^[:alpha:]]\)"
-FILE=resources/lang/en_US/default.po
+FILE=resources/lang/en_US/*.po
 
 sed -i "/^msgstr/s/${DELIM}angel${DELIM}/\1volunteer\2/g" $FILE
 sed -i "/^msgstr/s/${DELIM}Angel${DELIM}/\1Volunteer\2/g" $FILE
@@ -48,4 +48,5 @@ sed -i "s/charset=CHARSET/charset=UTF-8/" $FILE
 
 echo "Compiling resources/lang/en_US/default.po"
 
-msgfmt -o resources/lang/en_US/default.mo $FILE
+msgfmt -o resources/lang/en_US/default.mo resources/lang/en_US/default.po
+msgfmt -o resources/lang/en_US/additional.mo resources/lang/en_US/additional.po

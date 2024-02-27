@@ -7,10 +7,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Last-Translator: \n"
-"Language: en_US\n"
+"Language: en_USen_USen_US\n"
 
 msgid "auth.not-found"
-msgstr "No user was found or password is wrong. Please try again. If you are still having problems, ask Heaven."
+msgstr "No user was found or password is wrong. Please try again. If you are still having problems, ask Helper-GURU."
 
 msgid "validation.password.required"
 msgstr "The password is required."
@@ -84,9 +84,6 @@ msgstr "News successfully updated."
 msgid "news.delete.success"
 msgstr "News successfully deleted."
 
-msgid "news.edit.contains-html"
-msgstr "This message contains HTML. After saving the post some formatting will be lost!"
-
 msgid "oauth.invalid-state"
 msgstr "Invalid OAuth state"
 
@@ -108,8 +105,41 @@ msgstr "Unable to find account"
 msgid "oauth.provider-not-found"
 msgstr "Unable to find OAuth provider"
 
+msgid "oauth.invalid_request"
+msgstr "The OAuth-Provider rejected the request due to a missing or invalid parameter."
+
+msgid "oauth.unauthorized_client"
+msgstr "Not authorized as a client with the OAuth-Provider."
+
+msgid "oauth.access_denied"
+msgstr "The resource owner or authorization server denied the request."
+
+msgid "oauth.unsupported_response_type"
+msgstr "The OAuth-Provider does not support obtaining an authorization code using this method."
+
+msgid "oauth.invalid_scope"
+msgstr "The requested scope is invalid, unknown, or malformed."
+
+msgid "oauth.server_error"
+msgstr "The OAuth-Provider encountered an unexpected condition that prevented it from fulfilling the request."
+
+msgid "oauth.temporarily_unavailable"
+msgstr "The OAuth-Provider is currently unable to handle the request "
+"due to a temporary overloading or maintenance of the server."
+
 msgid "settings.profile"
 msgstr "Profile"
+
+msgid "settings.profile.planned_arrival_date.invalid"
+msgstr "Please enter your planned date of arrival. "
+"It should be after the buildup start date and before teardown end date."
+
+msgid "settings.profile.planned_departure_date.invalid"
+msgstr "Please enter your planned date of departure. "
+"It should be after your planned arrival date and after buildup start date and before teardown end date."
+
+msgid "settings.profile.success"
+msgstr "Settings saved."
 
 msgid "faq.delete.success"
 msgstr "FAQ entry successfully deleted."
@@ -135,5 +165,61 @@ msgstr "A new news is available: %1$s"
 msgid "notification.news.new.text"
 msgstr "You can watch it at %3$s"
 
+msgid "notification.messages.new"
+msgstr "New private message from %s"
+
+msgid "notification.messages.new.text"
+msgstr "you've got a new private message from %s. You can view it under %s"
+
+msgid "notification.angeltype.confirmed"
+msgstr "You have been confirmed as an %s"
+
+msgid "notification.angeltype.confirmed.introduction"
+msgstr "You have been confirmed as an %1$s by a supporter."
+
+msgid "notification.angeltype.confirmed.text"
+msgstr "You can find a description at %2$s"
+
+msgid "notification.angeltype.added"
+msgstr "You have been added as an %s"
+
+msgid "notification.angeltype.added.introduction"
+msgstr "You have been added as an %1$s by a supporter."
+
+msgid "notification.angeltype.added.text"
+msgstr "You can find a description at %2$s"
+
+msgid "notification.shift.deleted"
+msgstr "Your Shift was deleted"
+
+msgid "notification.shift.deleted.introduction"
+msgstr "A Shift you are registered on was deleted:"
+
+msgid "notification.shift.deleted.worklog"
+msgstr ""
+"Since the deleted shift was already done, "
+"we added a worklog entry instead, to keep your work hours correct."
+
 msgid "user.edit.success"
 msgstr "User edited successfully."
+
+msgid "message.delete.success"
+msgstr "Message successfully deleted."
+
+msgid "worklog.add.success"
+msgstr "Work log successfully added."
+
+msgid "worklog.edit.success"
+msgstr "Work log successfully updated."
+
+msgid "worklog.delete.success"
+msgstr "Work log successfully deleted."
+
+msgid "room.edit.success"
+msgstr "Room edited successfully."
+
+msgid "room.delete.success"
+msgstr "Room successfully deleted."
+
+msgid "validation.name.exists"
+msgstr "The name is already used."

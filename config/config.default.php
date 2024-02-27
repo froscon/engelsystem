@@ -8,7 +8,7 @@ return [
         'host'     => env('MYSQL_HOST', (env('CI', false) ? 'mariadb' : 'localhost')),
         'database' => env('MYSQL_DATABASE', 'helfer'),
         'username' => env('MYSQL_USER', 'helfersystem'),
-        'password' => env('MYSQL_PASSWORD', 'Pae0yieLaegaerei2aizayahn9eezuf9eibe'),
+        'password' => env('MYSQL_PASSWORD', ''),
     ],
 
     // For accessing stats
@@ -18,7 +18,7 @@ return [
     'maintenance'             => (bool)env('MAINTENANCE', false),
 
     // Application name (not the event name!)
-    'app_name'                => env('APP_NAME', 'Helfersystem'),
+    'app_name'                => env('APP_NAME', 'Helferinnensystem'),
 
     // Set to development to enable debugging messages
     'environment'             => env('ENVIRONMENT', 'production'),
@@ -50,20 +50,20 @@ return [
     // Email config
     'email'                   => [
         // Can be mail, smtp, sendmail or log
-        'driver' => env('MAIL_DRIVER', 'mail'),
+        'driver' => 'smtp',
         'from'   => [
             // From address of all emails
-            'address' => env('MAIL_FROM_ADDRESS', 'noreply@engelsystem.de'),
-            'name'    => env('MAIL_FROM_NAME', env('APP_NAME', 'Engelsystem')),
+            'address' => 'noreply+helfer@froscon.org',
+            'name'    => 'Helferinnensystem',
         ],
 
-        'host'       => env('MAIL_HOST', 'localhost'),
-        'port'       => env('MAIL_PORT', 587),
+        'host'       => 'mail.froscon.org',
+        'port'       => 25,
         // Transport encryption like tls (for starttls) or ssl
-        'encryption' => env('MAIL_ENCRYPTION', null),
-        'username'   => env('MAIL_USERNAME'),
-        'password'   => env('MAIL_PASSWORD'),
-        'sendmail'   => env('MAIL_SENDMAIL', '/usr/sbin/sendmail -bs'),
+        'encryption' => 'tls',
+        'username'   => '',
+        'password'   => '',
+        'sendmail'   => '/run/wrappers/bin/sendmail -bs',
     ],
 
     # Your privacy@ contact address
@@ -343,7 +343,7 @@ return [
         'X-Content-Type-Options'  => 'nosniff',
         'X-Frame-Options'         => 'sameorigin',
         'Referrer-Policy'         => 'strict-origin-when-cross-origin',
-        'Content-Security-Policy' => 'default-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; img-src \'self\' data:;',
+        'Content-Security-Policy' => 'default-src \'self\' \'unsafe-eval\' \'unsafe-inline\' www.openstreetmap.org; img-src \'self\' data:;',
         'X-XSS-Protection'        => '1; mode=block',
         'Feature-Policy'          => 'autoplay \'none\'',
         //'Strict-Transport-Security' => 'max-age=7776000',
