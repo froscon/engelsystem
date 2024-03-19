@@ -47,6 +47,17 @@ services:
       - db:/var/lib/mysql
     networks:
       - database
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: database
+    networks:
+      - database
+      - internet
+    ports:
+      - "5081:80"
+    profiles:
+      - dev
 volumes:
   db: {}
 
