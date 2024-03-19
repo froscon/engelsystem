@@ -1,13 +1,13 @@
 ---
 version: "3.6"
 services:
-  helferinnen_server:
-    image: helferinnen_server
+  server:
+    image: ${COMPOSE_PROJECT_NAME}_server
     build:
       context: ..
       dockerfile: docker/Dockerfile
     environment:
-      MYSQL_HOST: helferinnen_database
+      MYSQL_HOST: database
       MYSQL_USER: helferinnensystem
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
       MYSQL_DATABASE: helferinnensystem
@@ -34,10 +34,10 @@ services:
       - database
       - internet
     depends_on:
-      - helferinnen_database
+      - database
     secrets:
       - db_password
-  helferinnen_database:
+  database:
     image: mariadb:10.2
     environment:
       MYSQL_DATABASE: helferinnensystem
@@ -52,6 +52,17 @@ services:
     secrets:
       - db_root_password
       - db_password
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: database
+    networks:
+      - database
+      - internet
+    ports:
+      - "5081:80"
+    profiles:
+      - dev
 volumes:
   db: {}
 
