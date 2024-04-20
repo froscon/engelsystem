@@ -33,6 +33,7 @@ services:
       - database
 volumes:
   db: {}
+  backup: {}
 
 networks:
   database:
