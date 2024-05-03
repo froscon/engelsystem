@@ -1,7 +1,7 @@
 # Helferinnensystem
 
-This is our fork of the [engelsystem](https://engelsystem.de), including minimal
-information about how to set it up.
+This is our fork of the [engelsystem](https://engelsystem.de), including some
+information about how to set it up. It might be somewhat FrOSCon-specific.
 See [/README.md](/README.md) for the original readme file with more details.
 
 
@@ -28,7 +28,7 @@ Check the following configurations and adapt as necessary:
 Starting `docker-compose` will first build and then start three containers:
 
 - `es_database` is a standard mariadb container. To inspect it manually, use the
-  [phpmyadmin container](#minor-stuff).
+  [`phpmyadmin` container](#minor-stuff).
 - `es_server` hosts the engelsystem itself. It takes some time to build...
 - `backup` for database backups, [see here](#backups).
 
@@ -52,7 +52,7 @@ You should now find a working helferinnensystem on port 80!
 The general idea of this fork is to maintain a set of commits that can be
 rebased easily onto new upstream versions. Hence, any changes to this fork
 should be easy to rebase: try to avoid modifying files and instead add new
-files (examples: `docker-compose .override.yml`, `.github/README.md`).
+files (examples: `docker-compose.override.yml`, `.github/README.md`).
 
 To propose a new change, open a PR against this fork and consider the following:
 
@@ -70,7 +70,7 @@ If our `main` changed, follow the instructions below but skip the `rebase` step.
 To update to a new upstream version, rebase the current `main` branch on the
 upstream's `main` branch. If the rebase looks good and the whole setup boots
 locally, then (and only then) force-push the result back to `main`. Finally,
-go to `helfen.froscon.org`, pull the changes, rebuild the docker container,
+go to your server, pull the changes, rebuild the docker container,
 restart it and (most likely) run the migrations.
 
 ```bash
@@ -81,7 +81,7 @@ upstream	git@github.com:engelsystem/engelsystem.git (push)
 $ git rebase -i main upstream/main
 ...
 $ git push -f
-$ ssh helfen.froscon.org
+$ ssh <your server>
 $ cd engelsystem/docker/
 $ git pull
 $ docker compose build
@@ -95,7 +95,9 @@ $ docker compose exec es_server bin/migrate
 
 ## Preparing for a new year
 
-Starting a new FrOSCon year should be fairly easy now:
+For FrOSCon, or other recurring events, we avoid recreating all shifts every
+year. Instead we purge data that is specific to a particular year and carefully
+move the shifts to the next year. To do this:
 
 - update to the [latest upstream version](#new-upstream-version)
 - run `new-year-cleanup.py <FrOSCon Saturday>` to purge the database
@@ -132,21 +134,21 @@ this to be [upstreamed](https://github.com/engelsystem/engelsystem/pull/1367).
 
 We choose to avoid the whole angel terminology and refer to our volunteers as
 "volunteers" (English) and "Helferinnen" (German). On top, we choose to use the
-generic feminine form ("Helferinnen"). To implement this, we need to modify the
-language files that live in `resources/lang/`.
+generic feminine form ("Helferinnen"). To implement this, we modify the language
+files that live in `resources/lang/`.
 
 The main `Dockerfile` already compiles the `.mo` files from the respective `.po`
-files. We conveniently hook into this process and simply patch these `.po` files
-before the compilation by executing a few custom scripts.
+files. We conveniently hook into this process and patch these `.po` files before
+the compilation by executing a few custom scripts.
 
 Whenever the upstream changes or adds new texts, these scripts might need to be
 adapted! At the end of the scripts, they look for common words from the "angel
-terminology" so you can simply run them locally to check whether they currently
+terminology" so you can run them locally to check whether they currently
 miss any instances.
 
-For the German language files, we simply run `sed -i` a bunch of times. While
-most patterns are fairly generic, some are very specific to some strings. We
-tried to avoid patterns with "sub-matches" of other patterns, but beware!
+For the German language files, we run `sed -i` a bunch of times. While most
+patterns are fairly generic, some are very specific to individual strings. We
+tried to avoid patterns that are "sub-patterns" of others, but beware!
 
 For the English language, not all strings are put into `.mo` files (yet?). Some
 (still?) live as default values in the source code. We thus first create the
@@ -166,30 +168,26 @@ regular snapshots. We do regular backups because
   and easy way
 - the backups are simple and small
 
-To do backups, we add a `docker/backup.Dockerfile` that is built and started as
-another container with (root) access to the database. This container runs `cron`
-with two jobs:
+We add a `docker/backup.Dockerfile` that is built and started as another
+container with (root) access to the database. This container runs `cron` with
+two jobs:
 
 - an hourly `mysqldump` of all databases to a file
 - a daily removal of all files older than a week
 
-The files are written to a `backup` volume living on the host. We retain 168
-files at most, and full dumps at the end of FrOSCon used to be below 1MB.
+The files are written to a `backup` volume living on the host. We retain
+`7 * 24 = 168` files at most, and full dumps at the end of FrOSCon used to be
+below 1MB.
 
 
 #### Restore a backup
 
-Due to the whole container setup, it is much easier to use the
+Due to the whole container setup, we recommend using the
 [phpmyadmin container](#minor-stuff) for all database operations. If you really
 want to use the command line, you might need to go into the database container
 and connect from there. Note that piping files into mysql in this scenario
 either requires copying this file into the container first, or some pretty
 fragile piping magic through `docker exec`...
-
-```bash
-$ docker compose exec es_database /bin/sh
-$ mysql -p <root password> ...
-```
 
 To first inspect a backup file and possibly compare to the current state:
 
@@ -209,6 +207,8 @@ the database, unless you use the `root` user.
 
 
 ### Minor stuff
+
+Our fork does a few other rather simple changes:
 
 - Add the FrOSCon logo as favicon and volunteer icon
 - Grant database privileges on all `helferinnensystem%` to simplify typical
