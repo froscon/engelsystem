@@ -2,7 +2,7 @@
 
 This is our fork of the [engelsystem](https://engelsystem.de), including minimal
 information about how to set it up.
-See [/README.md] for the original readme file with more details.
+See [/README.md](/README.md) for the original readme file with more details.
 
 
 ## Installation
