@@ -55,6 +55,7 @@ services:
       - es_database
     environment:
       MYSQL_HOST: es_database
+      MYSQL_DATABASE: helferinnensystem
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
     networks:
       - database
