@@ -28,7 +28,7 @@ services:
       MAIL_HOST: mail.froscon.org
     restart: unless-stopped
     volumes:
-      - ../config/config.override.php:/var/www/config/config.php:ro
+      - ../config/config.php:/var/www/config/config.php:ro
     secrets:
       - db_password
   es_database:
