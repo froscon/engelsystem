@@ -36,6 +36,12 @@ class MailerTest extends TestCase
 
         $mailer->setFromAddress('from@foo.bar');
         $this->assertEquals('from@foo.bar', $mailer->getFromAddress());
+
+        $mailer->setReplyToName('Reply Name');
+        $this->assertEquals('Reply Name', $mailer->getReplyToName());
+
+        $mailer->setReplyToAddress('reply@foo.bar');
+        $this->assertEquals('reply@foo.bar', $mailer->getReplyToAddress());
     }
 
     /**
@@ -52,6 +58,7 @@ class MailerTest extends TestCase
                 $this->assertStringContainsString('to@xam.pel', $message->toString());
                 $this->assertStringContainsString('foo@bar.baz', $message->toString());
                 $this->assertStringContainsString('Test Tester', $message->toString());
+                $this->assertStringContainsString('Reply-To: Reply Tester <reply@foo.bar>', $message->toString());
                 $this->assertStringContainsString('Foo Bar', $message->toString());
                 $this->assertStringContainsString('Lorem Ipsum!', $message->toString());
             });
@@ -59,6 +66,8 @@ class MailerTest extends TestCase
         $mailer = new Mailer($log, $symfonyMailer);
         $mailer->setFromAddress('foo@bar.baz');
         $mailer->setFromName('Test Tester');
+        $mailer->setReplyToAddress('reply@foo.bar');
+        $mailer->setReplyToName('Reply Tester');
 
         $status = $mailer->send('to@xam.pel', 'Foo Bar', 'Lorem Ipsum!');
         $this->assertTrue($status);
@@ -82,6 +91,8 @@ class MailerTest extends TestCase
         $mailer = new Mailer($log, $symfonyMailer);
         $mailer->setFromAddress('foo@bar.baz');
         $mailer->setFromName('Test Tester');
+        $mailer->setReplyToAddress('reply@foo.bar');
+        $mailer->setReplyToName('Reply Tester');
 
         $status = $mailer->send('to@xam.pel', 'Foo Bar', 'Lorem Ipsum!');
         $this->assertFalse($status);
