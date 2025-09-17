@@ -76,6 +76,11 @@ return [
             'address' => env('MAIL_FROM_ADDRESS', 'noreply@example.com'),
             'name'    => env('MAIL_FROM_NAME', env('APP_NAME', 'Engelsystem')),
         ],
+        'reply_to' => [
+            // Reply-To header of all emails
+            'address' => env('MAIL_REPLY_TO_ADDRESS', 'noreply@example.com'),
+            'name'    => env('MAIL_REPLY_TO_NAME', env('APP_NAME', 'Engelsystem')),
+        ],
 
         'host'       => env('MAIL_HOST', 'localhost'),
         'port'       => env('MAIL_PORT', 587),
