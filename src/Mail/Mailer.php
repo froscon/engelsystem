@@ -6,6 +6,7 @@ namespace Engelsystem\Mail;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Throwable;
 
@@ -14,6 +15,10 @@ class Mailer
     protected string $fromAddress = '';
 
     protected ?string $fromName = null;
+
+    protected string $replyToAddress = '';
+
+    protected ?string $replyToName = null;
 
     public function __construct(protected LoggerInterface $log, protected MailerInterface $mailer)
     {
@@ -28,7 +33,8 @@ class Mailer
     {
         $message = (new Email())
             ->to(...(array) $to)
-            ->from(sprintf('%s <%s>', $this->fromName, $this->fromAddress))
+            ->from(new Address($this->fromAddress, $this->fromName ?? ''))
+            ->replyTo(new Address($this->replyToAddress, $this->replyToName ?? ''))
             ->subject($subject)
             ->text($body);
 
@@ -71,5 +77,25 @@ class Mailer
     public function setFromName(string $fromName): void
     {
         $this->fromName = $fromName;
+    }
+
+    public function getReplyToAddress(): string
+    {
+        return $this->replyToAddress;
+    }
+
+    public function setReplyToAddress(?string $replyToAddress): void
+    {
+        $this->replyToAddress = $replyToAddress;
+    }
+
+    public function getReplyToName(): string
+    {
+        return $this->replyToName;
+    }
+
+    public function setReplyToName(?string $replyToName): void
+    {
+        $this->replyToName = $replyToName;
     }
 }
