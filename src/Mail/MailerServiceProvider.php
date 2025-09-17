@@ -35,10 +35,14 @@ class MailerServiceProvider extends ServiceProvider
 
         /** @var EngelsystemMailer $mailer */
         $mailer = $this->app->make(EngelsystemMailer::class);
-        $mailer->setFromAddress($mailConfig['from']['address']);
         $mailer->setSubjectPrefix($config->get('app_name'));
+        $mailer->setFromAddress($mailConfig['from']['address']);
         if (!empty($mailConfig['from']['name'])) {
             $mailer->setFromName($mailConfig['from']['name']);
+        }
+        $mailer->setReplyToAddress($mailConfig['reply_to']['address']);
+        if (!empty($mailConfig['reply_to']['name'])) {
+            $mailer->setReplyToName($mailConfig['reply_to']['name']);
         }
 
         $this->app->instance(EngelsystemMailer::class, $mailer);
