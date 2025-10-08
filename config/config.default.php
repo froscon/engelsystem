@@ -452,8 +452,11 @@ return [
         // Cookie name
         'name'   => env('SESSION_NAME', 'session'),
 
-        // Lifetime in days
-        'lifetime' => env('SESSION_LIFETIME', 30),
+        // Lifetime for anonymous sessions in seconds
+        'anonymous_lifetime' => env('ANONYMOUS_SESSION_LIFETIME', 60 * 60),
+
+        // Lifetime for authenticated sessions in seconds
+        'lifetime' => env('SESSION_LIFETIME', 30 * 24 * 60 * 60),
     ],
 
     // IP addresses of reverse proxies that are trusted, can be an array or a comma separated list

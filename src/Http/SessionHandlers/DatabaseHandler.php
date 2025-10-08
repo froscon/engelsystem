@@ -55,10 +55,20 @@ class DatabaseHandler extends AbstractHandler
      */
     public function gc(int $max_lifetime): int|false
     {
-        $sessionDays = config('session')['lifetime'];
-        $deleteBefore = Carbon::now()->subDays($sessionDays);
+        $deleteBefore = Carbon::now()->subSeconds($config('session')['lifetime']);
+        $deleteAnonymousBefore = Carbon::now()->subSeconds($config('session')['anonymous_lifetime']);
 
-        return Session::where('last_activity', '<', $deleteBefore)
+        return
+            Session::where(function (Builder $query) {
+                $query
+                    ->where('user_id', '!=', 0)
+                    ->where('last_activity', '<', $deleteBefore);
+            })
+            ->orWhere(function (Builder $query) {
+                $query
+                    ->where('user_id', '=', 0)
+                    ->where('last_activity', '<', $deleteAnonymousBefore);
+            })
             ->delete();
     }
 }
