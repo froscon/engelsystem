@@ -1,0 +1,156 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Engelsystem\Application;
+use Engelsystem\Config\Config;
+use Engelsystem\Controllers\Admin\ConfigController;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
+require_once __DIR__ . '/../includes/application.php';
+
+/** @var Application $app */
+$app = app();
+
+$script = array_shift($argv);
+$argv = array_map('strtolower', $argv);
+if (in_array('help', $argv) || in_array('--help', $argv) || in_array('-h', $argv)) {
+    echo 'Usage: ' . $script . PHP_EOL;
+    echo 'Create markdown output containing all config options for the documentation page' . PHP_EOL;
+    echo PHP_EOL;
+    echo '  -h, --help,  help   Show this help' . PHP_EOL;
+    echo PHP_EOL;
+    echo 'Examples:' . PHP_EOL;
+    echo '  ' . $script . PHP_EOL;
+    echo '  ' . $script . ' --help' . PHP_EOL;
+    echo '  conf=../engelsystem-docs/content/admin/configuration.md; sed -i \'0,/DO NOT MODIFY/!d\' "$conf" && ';
+    echo '(echo; docker exec -it engelsystem_dev-es_workspace-1 ' . $script . ') >> $conf' . PHP_EOL;
+    echo PHP_EOL;
+    exit;
+}
+
+/** @var ConfigController $configController */
+$configController = $app->make(ConfigController::class, ['withAll' => true]);
+$options = $configController->getOptions();
+
+function toTypeValue($value): string
+{
+    return match (gettype($value)) {
+        'NULL' => 'null',
+        'boolean' => $value ? 'true' : 'false',
+        'array' => json_encode($value),
+        default => (string) $value,
+    };
+}
+
+function toTypeValueConfig($value): string
+{
+    $varExportReplacements = [
+        '/^(\s*)array \(/m' => '$1[', // Array start
+        '/^(\s*)\)/m' => '$1]', // Array end
+        '/=>\s*\[/m' => '=> [', // Collapse multiline
+        '/\[\s*]/m' => '[]', // Simplify empty array
+        '/^(\s*)\d+ => /m' => '$1', // Remove numeric keys
+        '/\s*(\d+,\s*)$/m' => '$1', // Numeric values as list
+        '/(=> |\s*)\[((?:\d+,)*)\s*]/m' => '$1[$2]', // Patch numeric value lists
+        '/,]/m' => ']', // Fix , before closing bracket
+    ];
+
+    return match (gettype($value)) {
+        'NULL' => 'null',
+        'boolean' => $value ? 'true' : 'false',
+        'array' => preg_replace(
+            array_keys($varExportReplacements),
+            array_values($varExportReplacements),
+            var_export($value, true)
+        ),
+        default => (string) $value,
+    };
+}
+
+function toType($type): string
+{
+    return match ($type) {
+        'string' => 'text',
+        default => $type,
+    };
+}
+
+function squashLongValues($value)
+{
+    $lines = explode(PHP_EOL, $value);
+    if (count($lines) > 25) {
+        $valueLines = [
+            ...array_slice($lines, 0, 10),
+            '  // ...',
+            ...array_slice($lines, -10),
+        ];
+        $value = implode(PHP_EOL, $valueLines);
+    }
+    return $value;
+}
+
+foreach ($options as $option) {
+    echo PHP_EOL;
+    echo '## ' . __($option['title']);
+    echo PHP_EOL . PHP_EOL;
+
+    foreach ($option['config'] as $name => $config) {
+        $defaultValue = '';
+        $state = new Collection([
+            'Name' => $name,
+            'Type' => toType($config['type']),
+            'Env var' => $config['type'] !== 'static' ? $config['env'] : '-',
+        ]);
+        if (($config['type'] == 'static' || $config['type'] == 'select_multi') && $config['default'] ?? null !== []) {
+            $defaultValue = toTypeValueConfig($config['default'] ?? null);
+        } else {
+            $state['Default'] = $config['default'] ?? null;
+        }
+        if ($config['required'] ?? false) {
+            $state[] = 'Required';
+        }
+        if ($config['hidden'] ?? false) {
+            $state[] = 'Hidden';
+        }
+        $state = $state->map(fn($v, $k) => '* ' . (is_int($k) ? $v : $k . ': `' . toTypeValue($v) . '`'));
+
+        echo '### ' . __($config['name']);
+        echo PHP_EOL;
+
+        echo implode(PHP_EOL, $state->toArray());
+        echo PHP_EOL;
+
+        $info = 'config.' . $name . '.info';
+        if (__($info) !== $info) {
+            echo PHP_EOL;
+            echo __($info);
+            echo PHP_EOL;
+        }
+
+        if ($defaultValue) {
+            $defaultValue = squashLongValues($defaultValue);
+            echo PHP_EOL;
+            echo 'Default:' . PHP_EOL;
+            echo '```php' . PHP_EOL;
+            echo $defaultValue;
+            echo PHP_EOL;
+            echo '```' . PHP_EOL;
+        }
+
+        if (($config['type'] == 'select' || $config['type'] == 'select_multi') && $config['data'] ?? []) {
+            $value = toTypeValueConfig(array_keys($config['data']));
+            $value = squashLongValues($value);
+            echo PHP_EOL;
+            echo 'Possible values:' . PHP_EOL;
+            echo '```php' . PHP_EOL;
+            echo $value;
+            echo PHP_EOL;
+            echo '```' . PHP_EOL;
+        }
+
+        echo PHP_EOL;
+    }
+}

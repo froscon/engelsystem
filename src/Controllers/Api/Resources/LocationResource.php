@@ -6,11 +6,12 @@ namespace Engelsystem\Controllers\Api\Resources;
 
 use Engelsystem\Models\BaseModel;
 use Engelsystem\Models\Location;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
 
 class LocationResource extends BasicResource
 {
-    protected Collection | BaseModel | Location $model;
+    protected Collection | BaseModel | Pivot | Location $model;
 
     public function toArray(): array
     {
@@ -18,6 +19,8 @@ class LocationResource extends BasicResource
             'id' => $this->model->id,
             'name' => $this->model->name,
             'description' => $this->model->description ?: '',
+            'map_url' => $this->model->map_url,
+            'contact' => $this->model->only('dect'),
             'url' => url('/locations', ['action' => 'view', 'location_id' => $this->model->id]),
         ];
     }

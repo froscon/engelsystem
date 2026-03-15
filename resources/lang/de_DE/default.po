@@ -69,7 +69,7 @@ msgid "footer.eventinfo.start_end"
 msgstr "Event vom %1$s bis %2$s"
 
 msgid "footer.issues"
-msgstr "Bugs / Features"
+msgstr "Bugs/Features"
 
 msgid "footer.github"
 msgstr "Entwicklerplattform"
@@ -88,6 +88,9 @@ msgstr "Bitte melde dich an."
 
 msgid "form.submit"
 msgstr "Absenden"
+
+msgid "form.password.placeholder"
+msgstr "**********"
 
 msgid "form.send_notification"
 msgstr "%d Benachrichtigungen versenden"
@@ -252,7 +255,7 @@ msgstr "Schichteintrag gelöscht."
 
 msgid "This shift was imported from a schedule so some changes will be overwritten with the next import."
 msgstr ""
-"Diese Schicht wurde aus einem Fahrplan importiert. "
+"Diese Schicht wurde aus einem Programm importiert. "
 "Dadurch werden einige Änderungen beim nächsten Import überschrieben."
 
 msgid "Please select a location."
@@ -298,7 +301,7 @@ msgid "Shift could not be found."
 msgstr "Schicht konnte nicht gefunden werden."
 
 msgid "There are unconfirmed angels in %d angel type. Angel type that needs approval:"
-msgid_plural "There are unconfirmed angels in %d angel types. Angel types that need approvals:"
+msgid_plural "There are unconfirmed angels in %d angel types. Angel types that need approval:"
 msgstr[0] "Es gibt nicht freigeschaltete Engel in %d Engeltypen! Engeltyp der bestätigt werden muss:"
 msgstr[1] "Es gibt nicht freigeschaltete Engel in %d Engeltypen! Engeltypen die bestätigt werden müssen:"
 
@@ -488,6 +491,9 @@ msgstr "Nr."
 msgid "general.shifts"
 msgstr "Schichten"
 
+msgid "general.info"
+msgstr "Info"
+
 msgid "Length"
 msgstr "Länge"
 
@@ -498,7 +504,10 @@ msgid "Active"
 msgstr "Aktiv"
 
 msgid "Forced"
-msgstr "Erzwungen"
+msgstr "Dauerhaft aktiv"
+
+msgid "Food"
+msgstr "Essen"
 
 msgid "Given T-shirts"
 msgstr "Ausgegebene T-Shirts"
@@ -699,13 +708,19 @@ msgid "No"
 msgstr "Nein"
 
 msgid "Force active"
-msgstr "Aktiv erzwingen"
+msgstr "Dauerhaft aktiv"
+
+msgid "Force food"
+msgstr "Unbegrenzt Essen"
 
 msgid "Edit user"
 msgstr "User bearbeiten"
 
 msgid "general.datetime"
 msgstr "d.m.Y H:i"
+
+msgid "general.duration"
+msgstr "%dh %02dmin"
 
 msgid "API Settings"
 msgstr "API Einstellungen"
@@ -715,9 +730,6 @@ msgstr "Gib bitte einen Schwänz-Kommentar ein!"
 
 msgid "Shift saved."
 msgstr "Schicht gespeichert."
-
-msgid "Ask the Heaven"
-msgstr "Frag den Himmel"
 
 msgid "The administration has not configured any locations yet."
 msgstr "Die Administratoren habe noch keine Orte eingerichtet."
@@ -785,6 +797,9 @@ msgstr ""
 "Exportiere Deine Schichten im <a href=\"%s\" target=\"_blank\">iCal</a> oder <a href=\"%s"
 "\" target=\"_blank\">JSON</a> Format (Link bitte geheimhalten, sonst musst du den API-Key in "
 "<a href=\"%s\">deinen Einstellungen</a> zurücksetzen)."
+
+msgid "Per page"
+msgstr "Pro Seite"
 
 msgid "All"
 msgstr "Alle"
@@ -884,9 +899,6 @@ msgstr "Fahrer"
 msgid "Has car"
 msgstr "Hat Auto"
 
-msgid "Info"
-msgstr "Info"
-
 msgid "Supporters"
 msgstr "Supporter"
 
@@ -932,8 +944,8 @@ msgstr "Meine Schicht"
 msgid "Help needed"
 msgstr "Hilfe benötigt"
 
-msgid "Other angel type needed / collides with my shifts"
-msgstr "Andere Engeltypen benötigt / kollidiert mit meinen Schichten"
+msgid "Other angel type needed/collides with my shifts"
+msgstr "Andere Engeltypen benötigt/kollidiert mit meinen Schichten"
 
 msgid "Shift is full"
 msgstr "Schicht ist voll"
@@ -947,7 +959,7 @@ msgstr "Mehr Engel hinzufügen"
 msgid "%d helper needed"
 msgid_plural "%d helpers needed"
 msgstr[0] "%d Helfer benötigt"
-msgstr[1] "%d Helfer benötigt"
+msgstr[1] "%d Helfende benötigt"
 
 msgid "Sign up"
 msgstr "Eintragen"
@@ -1079,8 +1091,8 @@ msgstr "Gutscheine bearbeiten"
 msgid "voucher.eligible"
 msgstr "Engel kann noch %d Gutscheine bekommen."
 
-msgid "voucher.eligible.fa"
-msgstr "Engel kann noch %d Gutscheine bekommen und ist FA."
+msgid "voucher.eligible.force"
+msgstr "Engel kann <s>&thinsp;%d&thinsp;</s> unbegrenzt Gutscheine bekommen."
 
 msgid "voucher.count"
 msgstr "Anzahl Gutscheine bekommen"
@@ -1088,11 +1100,11 @@ msgstr "Anzahl Gutscheine bekommen"
 msgid "user.state.vouchers"
 msgstr "%s von %s Gutscheinen bekommen"
 
-msgid "user.state.vouchers.none"
-msgstr "Keine Gutscheine bekommen"
+msgid "user.state.vouchers.force"
+msgstr "<s>&thinsp;%d&thinsp;</s> unendlich"
 
 msgid "Freeloads"
-msgstr "Schwänzereien"
+msgstr "Geschwänzt"
 
 msgid "Last login"
 msgstr "Letzter Login"
@@ -1220,6 +1232,12 @@ msgstr "Hier kannst du das Passwort für diesen Engel zurücksetzen:"
 msgid "Here you can define the user groups of the angel:"
 msgstr "Hier kannst du die Benutzergruppen des Engels definieren:"
 
+msgid "You cannot remove the default group."
+msgstr "Du kannst die Standard-Benutzergruppe nicht entfernen."
+
+msgid "You removed the default group, this has unintended side effects!"
+msgstr "Du hast die Standard-Benutzergruppe entfernt, dies führt zu unerwarteten Nebeneffekten!"
+
 msgid "User groups saved."
 msgstr "Benutzergruppen gespeichert."
 
@@ -1303,6 +1321,9 @@ msgstr "Alle löschen"
 
 msgid "form.updated"
 msgstr "Aktualisiert"
+
+msgid "form.generate"
+msgstr "Generieren"
 
 msgid "form.cancel"
 msgstr "Abbrechen"
@@ -1454,6 +1475,9 @@ msgstr "Du kannst sie dir unter %3$s anschauen."
 
 msgid "form.search"
 msgstr "Suchen"
+
+msgid "form.exact_match"
+msgstr "Genaue Übereinstimmung"
 
 msgid "log.log"
 msgstr "Logs"
@@ -1669,7 +1693,7 @@ msgid "settings.certificates.drive_confirmed.hint"
 msgstr "Dein Führerschein wurde bestätigt, du kannst deine Angaben nicht mehr selber ändern."
 
 msgid "settings.certificates.confirmation.info"
-msgstr "Du hast persönlich überprüft, dass die Zertifizierung / Bescheinigung den Anforderungen genügt."
+msgstr "Du hast persönlich überprüft, dass die Zertifizierung/Bescheinigung den Anforderungen genügt."
 
 msgid "settings.certificates.success"
 msgstr "Zertifikate wurden erfolgreich aktualisiert."
@@ -1826,9 +1850,6 @@ msgstr "Goodie bearbeiten"
 msgid "user.goodie_score.enough"
 msgstr "Genug"
 
-msgid "user.goodie_score.value"
-msgstr "%s h"
-
 msgid "user.goodie_score"
 msgstr "Goodie Score: %s"
 
@@ -1839,7 +1860,10 @@ msgid "user.active"
 msgstr "Aktiv"
 
 msgid "user.force_active"
-msgstr "Aktiv (erzwungen)"
+msgstr "Dauerhaft aktiv"
+
+msgid "user.force_food"
+msgstr "Unbegrenzt Essen"
 
 msgid "user.arrived"
 msgstr "Angekommen"
@@ -1877,8 +1901,11 @@ msgstr "Einsatzdatum"
 msgid "worklog.hours"
 msgstr "Arbeitsstunden"
 
-msgid "worklog.comment"
-msgstr "Kommentar"
+msgid "worklog.description"
+msgstr "Beschreibung"
+
+msgid "worklog.night_shift"
+msgstr "Arbeitseinsatz ist eine Nachtschicht"
 
 msgid "worklog.delete"
 msgstr "Arbeitseinsatz löschen"
@@ -1910,6 +1937,21 @@ msgid "angeltypes.hide_on_shift_view.info"
 msgstr "Wenn ausgewählt, können nur Admins und Mitglieder des Engeltyps auf der "
 "Schicht Seite die Filteroption für diesen Engeltyp sehen."
 
+msgid "angeltypes.qr"
+msgstr "Engeltyp \"%s\" beitreten QR Code"
+
+msgid "angeltypes.qr.expires"
+msgstr "Läuft ab %c"
+
+msgid "angeltypes.qr.expired"
+msgstr "Abgelaufen"
+
+msgid "angeltypes.qr.time"
+msgstr "Lebensdauer (Minuten)"
+
+msgid "angeltypes.qr.time.info"
+msgstr "Der Link ist für die gesamte angegebene Zeitspanne gültig und kann nicht zurückgezogen werden!"
+
 msgid "location.location"
 msgstr "Ort"
 
@@ -1920,7 +1962,7 @@ msgid "location.map_url"
 msgstr "Karte"
 
 msgid "location.required_angels"
-msgstr "Benötigte Engel (bei Fahrplan import)"
+msgstr "Benötigte Engel (bei Programmimport/-kopie)"
 
 msgid "location.map_url.info"
 msgstr "Die Karte wird auf der Ort-Seite als iframe eingebettet."
@@ -1947,7 +1989,7 @@ msgid "shifttype.delete.title"
 msgstr "Schichttyp \"%s\" löschen"
 
 msgid "shifttype.required_angels"
-msgstr "Benötigte Engel (bei Fahrplan import)"
+msgstr "Benötigte Engel (bei Programmimport/-kopie)"
 
 msgid "shifttype.edit.signup_advance_hours"
 msgstr "Selbsteintragen im voraus in Stunden"
@@ -1995,6 +2037,12 @@ msgstr "Anzahl"
 
 msgid "general.created_at"
 msgstr "Erstellt am"
+
+msgid "general.url"
+msgstr "URL"
+
+msgid "general.qr"
+msgstr "QR Code"
 
 msgid "shifts.history"
 msgstr "Schichten Historie"
@@ -2096,3 +2144,9 @@ msgstr "Konfiguration"
 
 msgid "config.edit.success"
 msgstr "Konfiguration erfolgreich angepasst"
+
+msgid "config.warning_from_env"
+msgstr "Konfiguration wird aus ENV variable überschrieben!"
+
+msgid "config.warning_file_not_writable"
+msgstr "Konfigurationsdatei config.local.php ist nicht beschreibbar!"

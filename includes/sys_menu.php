@@ -48,7 +48,7 @@ function make_navigation(): array
         'user_shifts'    => 'general.shifts',
         'angeltypes'     => 'angeltypes.angeltypes',
         'locations'      => ['location.locations', 'locations.view'],
-        'questions'      => ['Ask the Heaven', 'question.add'],
+        'questions'      => ['question.menu', 'question.add'],
     ];
 
     foreach ($pages as $menu_page => $options) {
@@ -113,8 +113,9 @@ function make_language_select()
     $activeLocale = session()->get('locale');
 
     $items = [];
-    foreach (config('locales') as $locale => $name) {
+    foreach (config('locales') as $locale) {
         $url = url($request->getPathInfo(), [...$request->getQueryParams(), 'set-locale' => $locale]);
+        $name = __('language.' . $locale);
 
         $items[] = toolbar_dropdown_item(
             htmlspecialchars($url),

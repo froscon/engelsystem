@@ -1,6 +1,7 @@
 <?php
 
 use Engelsystem\Config\GoodieType;
+use Engelsystem\Helpers\Markdown;
 use Engelsystem\Models\AngelType;
 use Engelsystem\Models\User\License;
 use Engelsystem\Models\User\User;
@@ -284,6 +285,15 @@ function AngelType_view_buttons(
             '',
             __('form.edit')
         );
+        if (config('app_key') && config('join_qr_code', true)) {
+            $buttons[] = button(
+                url('/angeltypes/' . $angeltype->id . '/qr'),
+                icon('qr-code'),
+                '',
+                '',
+                __('general.qr')
+            );
+        }
     }
     if ($admin_angeltypes) {
         $buttons[] = button(
@@ -595,7 +605,7 @@ function AngelType_view(
     $add = (($admin_angeltypes || $admin_user_angeltypes) ? button(
         url('/user-angeltypes', ['action' => 'add', 'angeltype_id' => $angeltype->id]),
         icon('plus-lg'),
-        '',
+        'btn-sm',
         '',
         __('general.add')
     ) : '');
@@ -605,7 +615,7 @@ function AngelType_view(
             AngelType_view_buttons($angeltype, $user_angeltype, $admin_angeltypes, $supporter, $user_license, $user),
             msg(),
             tabs([
-                __('Info') => AngelType_view_info(
+                __('general.info') => AngelType_view_info(
                     $angeltype,
                     $members,
                     $admin_user_angeltypes,
@@ -668,9 +678,8 @@ function AngelType_view_info(
     }
 
     $info[] = '<h3>' . __('general.description') . '</h3>';
-    $parsedown = new Parsedown();
     if ($angeltype->description != '') {
-        $info[] = $parsedown->parse(htmlspecialchars($angeltype->description));
+        $info[] = (new Markdown())->render($angeltype->description);
     }
     if ($angeltype->requires_ifsg_certificate && $required_info_show) {
         $info[] = info(__('angeltype.ifsg.required.info.preview'), true);
@@ -782,7 +791,7 @@ function AngelTypes_list_view($angeltypes, bool $admin_angeltypes)
     $add = button(
         url('/angeltypes', ['action' => 'edit']),
         icon('plus-lg'),
-        '',
+        'btn-sm',
         '',
         __('general.add')
     );

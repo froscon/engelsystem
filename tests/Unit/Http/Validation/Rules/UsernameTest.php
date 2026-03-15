@@ -21,16 +21,13 @@ class UsernameTest extends ServiceProviderTest
 
         $app = $this->createAndSetUpAppWithConfig([]);
         $this->config = $app->get('config');
-
-        // load "username_regex" from the default config
-        $defaultConfig = include __DIR__ . '/../../../../../config/config.default.php';
-        $this->config->set('username_regex', $defaultConfig['username_regex']);
+        $this->config->set('username_regex', '/([^\p{L}\p{N}_.-]+)/ui');
     }
 
     /**
      * @return array<string,array{string,bool}>
      */
-    public function provideValidateWithDefaultConfigTestData(): array
+    public function provideIsValidWithDefaultConfigTestData(): array
     {
         return [
             'empty string' => ['', false],
@@ -46,22 +43,22 @@ class UsernameTest extends ServiceProviderTest
     }
 
     /**
-     * @covers \Engelsystem\Http\Validation\Rules\Username::validate
-     * @dataProvider provideValidateWithDefaultConfigTestData
+     * @covers \Engelsystem\Http\Validation\Rules\Username::isValid
+     * @dataProvider provideIsValidWithDefaultConfigTestData
      */
-    public function testValidateWithDefaultConfig(mixed $value, bool $expectedValid): void
+    public function testIsValidWithDefaultConfig(mixed $value, bool $expectedValid): void
     {
-        self::assertSame($expectedValid, $this->subject->validate($value));
+        self::assertSame($expectedValid, $this->subject->isValid($value));
     }
 
     /**
-     * @covers \Engelsystem\Http\Validation\Rules\Username::validate
+     * @covers \Engelsystem\Http\Validation\Rules\Username::isValid
      */
-    public function testMissingConfigRaisesException(): void
+    public function testIsValidMissingConfigRaisesException(): void
     {
         $this->config->set('username_regex', null);
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('username_regex not set in config');
-        $this->subject->validate('test');
+        $this->subject->isValid('test');
     }
 }

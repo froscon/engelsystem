@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Engelsystem\Config\GoodieType;
 use Engelsystem\Http\Validation\Rules\Username;
 use Engelsystem\Models\Group;
@@ -139,6 +140,15 @@ function admin_user()
             $html .= '</td></tr>' . "\n";
         }
 
+        // Forced food?
+        if (config('enable_force_food')) {
+            $html .= '  <tr><td>' . __('Force food') . '</td><td>' . "\n";
+            $html .= auth()->can('user.ff.edit')
+                ? html_options('force_food', $options, $user_source->state->force_food)
+                : icon_bool($user_source->state->force_food);
+            $html .= '</td></tr>' . "\n";
+        }
+
         if ($goodie_enabled) {
             // got goodie?
             $html .= '  <tr><td>'
@@ -232,6 +242,7 @@ function admin_user()
     } else {
         switch ($request->input('action')) {
             case 'save_groups':
+                /** @var User $angel */
                 $angel = User::findOrFail($user_id);
                 if ($angel->id != $user->id || auth()->can('admin_groups')) {
                     /** @var Group $my_highest_group */
@@ -257,6 +268,22 @@ function admin_user()
                         $groupsRequest = $request->input('groups');
                         if (!is_array($groupsRequest)) {
                             $groupsRequest = [];
+                        }
+
+                        $defaultGroup = auth()->getDefaultRole();
+                        if (
+                            !in_array($defaultGroup, $groupsRequest)
+                            && $angel->groups->where('id', $defaultGroup)->count()
+                        ) {
+                            if (!auth()->can('admin_groups') && !config('default_group_removable')) {
+                                $html .= error(__('You cannot remove the default group.'), true);
+                                break;
+                            } else {
+                                $html .= warning(
+                                    __('You removed the default group, this has unintended side effects!'),
+                                    true
+                                );
+                            }
                         }
 
                         $angel->groups()->detach();
@@ -294,7 +321,7 @@ function admin_user()
                     $html .= error(__('settings.profile.email.already-taken') . "\n", true);
                     break;
                 }
-                if ($user_source->settings->email_human) {
+                if ($user_source->settings->email_human && !is_null($email)) {
                     $changed_email = $user_source->email !== $email;
                     $user_source->email = $email;
                 }
@@ -339,7 +366,13 @@ function admin_user()
                     $user_source->state->user_info = $request->postData('userInfo');
                 }
                 if ($admin_arrive) {
-                    $user_source->state->arrived = $request->postData('arrive');
+                    if ($user_source->state->arrived != $request->postData('arrive')) {
+                        if ($request->postData('arrive')) {
+                            $user_source->state->arrival_date = new Carbon();
+                        } else {
+                            $user_source->state->arrival_date = null;
+                        }
+                    }
                 }
 
                 if ($user_goodie_edit) {
@@ -348,18 +381,22 @@ function admin_user()
                 if (auth()->can('user.fa.edit') && config('enable_force_active')) {
                     $user_source->state->force_active = $request->input('force_active');
                 }
+                if (auth()->can('user.ff.edit') && config('enable_force_food')) {
+                    $user_source->state->force_food = $request->input('force_food');
+                }
                 $user_source->state->save();
 
                 engelsystem_log(
                     'Updated user: ' . ($changed_nick
-                        ? ('nick modified from ' . $old_nick . ' to ' . $user_source->name)
+                        ? ('nick modified from ' . $old_nick . ' (' . $user_source->id . ') to ' . $user_source->name)
                         : $user_source->name)
                     . ' (' . $user_source->id . ')'
-                    . ($changed_email ? ', email modified' : '')
+                    . ($changed_email ? ', e-mail modified' : '')
                     . ($goodie_tshirt ? ', T-shirt size: ' . $user_source->personalData->shirt_size : '')
                     . ', arrived: ' . $user_source->state->arrived
                     . ', active: ' . $user_source->state->active
-                    . ', force-active: ' . $user_source->state->force_active
+                    . (config('enable_force_active') ? (', force-active: ' . $user_source->state->force_active) : '')
+                    . (config('enable_force_food') ? (', force-food: ' . $user_source->state->force_food) : '')
                     . ($goodie_enabled ? ', goodie: ' . $user_source->state->got_goodie : '')
                     . ($user_info_edit ? ', user-info: ' . $user_source->state->user_info : '')
                 );

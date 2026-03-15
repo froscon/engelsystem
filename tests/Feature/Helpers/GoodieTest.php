@@ -24,17 +24,18 @@ class GoodieTest extends ApplicationFeatureTest
     /**
      * @covers \Engelsystem\Helpers\Goodie::userScore
      * @covers \Engelsystem\Helpers\Goodie::shiftScoreQuery
+     * @covers \Engelsystem\Helpers\Goodie::worklogScoreQuery
      */
     public function testUserScoreNightShift(): void
     {
-        $user = new User(['name' => '', 'email' => '', 'password' => '', 'api_key' => '']);
+        $user = new User(['name' => 'gn8', 'email' => 'g@n.8', 'password' => '', 'api_key' => '']);
         $user->save();
         $this->createdModels[] = $user;
         $workLog = new Worklog([
             'user_id' => $user->id,
             'hours' => 3.87,
             'creator_id' => $user->id,
-            'comment' => '',
+            'description' => '',
             'worked_at' => Carbon::now()->subHour(),
         ]);
         $workLog->save();
@@ -90,15 +91,14 @@ class GoodieTest extends ApplicationFeatureTest
         parent::setUp();
 
         $this->createdModels = [];
-        config(
-            'night_shifts',
-            [
+        config([
+            'night_shifts' => [
                 'enabled' => true,
                 'start' => 2,
                 'end' => 6,
                 'multiplier' => 2,
-            ]
-        );
+            ],
+        ]);
     }
 
     public function tearDown(): void

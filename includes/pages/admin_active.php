@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\CarbonInterval;
 use Engelsystem\Config\GoodieType;
 use Engelsystem\Database\Db;
 use Engelsystem\Helpers\Carbon;
@@ -26,6 +27,7 @@ function admin_active()
 {
     $tshirt_sizes = config('tshirt_sizes');
     $shift_sum_formula = Goodie::shiftScoreQuery()->getValue(Db::connection()->getQueryGrammar());
+    $worklog_sum_formula = Goodie::worklogScoreQuery()->getValue(Db::connection()->getQueryGrammar());
     $request = request();
     $goodie = GoodieType::from(config('goodie_type'));
     $goodie_enabled = $goodie !== GoodieType::None;
@@ -70,20 +72,21 @@ function admin_active()
                             users.*,
                             COUNT(shift_entries.id) AS shift_count,
                                 (%s + (
-                                    SELECT COALESCE(SUM(`hours`) * 3600, 0)
+                                    SELECT %s * 3600
                                     FROM `worklogs` WHERE `user_id`=`users`.`id`
                                     AND `worked_at` <= NOW()
                                 )) AS `shift_length`
                         ',
-                        $shift_sum_formula
+                        $shift_sum_formula,
+                        $worklog_sum_formula
                     )
                 )
                 ->leftJoin('shift_entries', 'users.id', '=', 'shift_entries.user_id')
                 ->leftJoin('shifts', 'shift_entries.shift_id', '=', 'shifts.id')
                 ->leftJoin('users_state', 'users.id', '=', 'users_state.user_id')
-                ->where('users_state.arrived', '=', true)
+                ->whereNotNull('users_state.arrival_date')
                 ->orWhere(function (EloquentBuilder $userinfo) {
-                    $userinfo->where('users_state.arrived', '=', false)
+                    $userinfo->whereNull('users_state.arrival_date')
                         ->whereNotNull('users_state.user_info')
                         ->whereNot('users_state.user_info', '');
                 })
@@ -185,12 +188,13 @@ function admin_active()
                     users.*,
                     COUNT(shift_entries.id) AS shift_count,
                         (%s + (
-                            SELECT COALESCE(SUM(`hours`) * 3600, 0)
+                            SELECT %s * 3600
                             FROM `worklogs` WHERE `user_id`=`users`.`id`
                             AND `worked_at` <= NOW()
                         )) AS `shift_length`
                 ',
-                $shift_sum_formula
+                $shift_sum_formula,
+                $worklog_sum_formula
             )
         )
         ->leftJoin('shift_entries', 'users.id', '=', 'shift_entries.user_id')
@@ -206,9 +210,9 @@ function admin_active()
             }
         })
         ->leftJoin('users_state', 'users.id', '=', 'users_state.user_id')
-        ->where('users_state.arrived', '=', true)
+        ->whereNotNull('users_state.arrival_date')
         ->orWhere(function (EloquentBuilder $userinfo) {
-            $userinfo->where('users_state.arrived', '=', false)
+            $userinfo->whereNull('users_state.arrival_date')
                 ->whereNotNull('users_state.user_info')
                 ->whereNot('users_state.user_info', '');
         })
@@ -272,11 +276,15 @@ function admin_active()
                 . '"></span></small>'
             );
         }
-        $userData['work_time'] = sprintf('%.2f', round($timeSum / 3600, 2)) . '&nbsp;h';
-        $userData['score'] = round($user['shift_length'] / 60)
-            . ' min (' . sprintf('%.2f', $user['shift_length'] / 3600) . '&nbsp;h)';
+        $duration_format = __('general.duration');
+        $userData['work_time'] = Carbon::formatDuration(CarbonInterval::seconds($timeSum), $duration_format);
+        $userData['score'] =  Carbon::formatDuration(
+            CarbonInterval::seconds((int) $user['shift_length']),
+            $duration_format
+        );
         $userData['active'] = icon_bool($user->state->active);
         $userData['force_active'] = icon_bool($user->state->force_active);
+        $userData['force_food'] = icon_bool($user->state->force_food);
         $userData['tshirt'] = icon_bool($user->state->got_goodie);
         $userData['shift_count'] = $user['shift_count'];
 

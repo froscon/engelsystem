@@ -67,6 +67,11 @@ body {
   padding-top: 70px;
 }
 
+// Keep navbar fixed at viewport width even when content is wider
+.navbar.fixed-top {
+  max-width: 100vw;
+}
+
 .footer a {
   color: $text-muted;
 }
@@ -148,6 +153,13 @@ table .border-bottom {
   padding: 0 2px;
 }
 
+table.table-sticky-header thead {
+  position: sticky;
+  top: 57px;
+  z-index: $zindex-sticky;
+  background-color: var(--es-table-sticky-bg, var(--bs-body-bg));
+}
+
 .stats {
   font-size: 20px;
   height: 150px;
@@ -208,6 +220,36 @@ table .border-bottom {
   }
 }
 
+// Expand user dropdown links on mobile devices. Subtraction needed to enforce state when viewport changes
+@media (max-width: map-get($grid-breakpoints, 'xxl') - 0.02px) {
+  .dropdown-user-menu {
+    .dropdown-toggle {
+      pointer-events: none;
+    }
+    .dropdown-toggle::after {
+      display: none;
+    }
+    .dropdown-menu {
+      display: block;
+    }
+  }
+}
+
+/* make selections scrollable and add a max height of 4.5 entries */
+#collapseShiftsFilterSelect .limit-height.selection {
+  overflow-y: auto;
+  max-height: ($form-check-min-height + $form-check-margin-bottom) * 4.5;
+}
+
+/* add divider between sorting groups of angel types selection */
+#angel_types_selection_hr {
+  margin: 0;
+}
+
+.form-check-input {
+  margin-right: 0.7em;
+}
+
 .selection .checkbox {
   display: block;
 }
@@ -244,12 +286,14 @@ table .border-bottom {
       border-top: 2px solid $table-border-color;
       font-size: 0.9em;
       padding-left: 5px;
+      padding-right: 5px;
     }
 
     .tick.day {
       border-top: 2px solid $primary;
       font-size: 0.9em;
       padding-left: 5px;
+      padding-right: 5px;
     }
 
     .tick.now {
@@ -263,9 +307,9 @@ table .border-bottom {
     z-index: $zindex-sticky + 1;
     border-right: 1px solid $table-border-color;
     flex-grow: 0;
-    min-width: 50px;
-    width: 50px;
     flex-shrink: 0;
+    width: max-content;
+    min-width: max-content;
   }
 
   .shift-card {
@@ -285,8 +329,27 @@ table .border-bottom {
   }
 }
 
-.column_duration {
+.column_duration,
+.column_work_time,
+.column_score {
   text-align: right;
+}
+
+.column_active,
+.column_force_active,
+.column_tshirt {
+  text-align: center;
+}
+
+.column_shift_info:not(:hover) .table-myshifts-shift-info-limit-height {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+
+  @media (min-width: map-get($grid-breakpoints, 'lg')) {
+    -webkit-line-clamp: 4;
+  }
 }
 
 h1,
@@ -350,6 +413,10 @@ h6,
 
 .ref-id[id] {
   padding-top: 3em;
+}
+
+.table-sticky-header .ref-id[id] {
+  padding-top: 7em;
 }
 
 // Cards
@@ -427,6 +494,21 @@ blockquote {
   padding-left: 0.5em;
 }
 
+.badge.bg-light {
+  color: var(--bs-btn-color);
+}
+
+/* center buttons in titles */
+h1 {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+
+  & .btn {
+    align-self: center;
+  }
+}
+
 /* Hide the arrow up/down buttons rendered by the browser in the input field */
 /* Chrome, Safari, Edge, Opera */
 input[type='number']::-webkit-outer-spin-button,
@@ -437,4 +519,19 @@ input[type='number']::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+/* Prevent shifts filter date/time values from being truncated */
+.choices:has(#start_day),
+.choices:has(#end_day) {
+  min-width: max-content;
+}
+
+.input-group.time {
+  min-width: max-content;
+  flex-wrap: nowrap;
+
+  input[type='time'] {
+    min-width: max-content;
+  }
 }

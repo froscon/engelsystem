@@ -38,7 +38,12 @@ class AngelTypeControllerTest extends ApiBaseControllerTest
             $first = $items->first();
             return $item['name'] == $first->getAttribute('name')
                 && $item['description'] == $first->getAttribute('description')
-                && $item['restricted'] == $first->getAttribute('restricted');
+                && $item['restricted'] == $first->getAttribute('restricted')
+                && $item['contact'] == [
+                    'name' => $first->getAttribute('contact_name'),
+                    'email' => $first->getAttribute('contact_email'),
+                    'dect' => $first->getAttribute('contact_dect'),
+                ];
         }));
     }
 
@@ -63,7 +68,7 @@ class AngelTypeControllerTest extends ApiBaseControllerTest
         $this->assertArrayHasKey('data', $data);
         $this->assertCount(3, $data['data']);
         $this->assertCount(1, collect($data['data'])->filter(function ($item) use ($items) {
-            return $item['name'] == $items->first()->angelType->name;
+            return $item['angeltype']['id'] == $items->first()->angelType->id;
         }));
     }
 

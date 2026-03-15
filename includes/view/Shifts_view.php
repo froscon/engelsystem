@@ -2,6 +2,7 @@
 
 use Engelsystem\Config\GoodieType;
 use Engelsystem\Helpers\Carbon;
+use Engelsystem\Helpers\Markdown;
 use Engelsystem\Models\AngelType;
 use Engelsystem\Models\Location;
 use Engelsystem\Models\Shifts\Shift;
@@ -167,7 +168,7 @@ function Shift_view(
         ->where('supporter', true)
         ->pluck('angel_types.id');
 
-    $parsedown = new Parsedown();
+    $mdRenderer = new Markdown();
 
     $angeltypes = [];
     foreach ($angeltypes_source as $angeltype) {
@@ -251,6 +252,13 @@ function Shift_view(
         ], 'mb-2');
     }
 
+    $tags = [];
+    foreach ($shift->tags as $tag) {
+        $tags[] = ' <a href="' . url('/user-shifts', ['tag' => $tag->id]) . '">'
+            . '<span class="badge bg-secondary">' . $tag->name . '</span>'
+            . '</a>';
+    }
+
     $content[] = $navigationButtons ? div('row', [div('col-md-12', [table_buttons($buttons, 'mb-2'), $navigationButtons])]) : buttons($buttons);
     $content[] = Shift_view_header($shift, $location);
 
@@ -261,9 +269,14 @@ function Shift_view(
             '<div class="list-group">' . $needed_angels . '</div>',
         ]),
         div('col-sm-6', [
-            '<h2>' . __('general.description') . '</h2>',
-            $parsedown->parse(htmlspecialchars($shifttype->description)),
-            $parsedown->parse(htmlspecialchars($shift->description)),
+            div('row', [
+                '<h2>' . __('general.description') . '</h2>',
+                $mdRenderer->render($shifttype->description),
+                $mdRenderer->render($shift->description),
+            ]),
+            div('row', [
+                div('col', $tags),
+            ]),
         ]),
     ]);
 
@@ -373,7 +386,7 @@ function Shift_view_render_needed_angeltype(
     );
 
     $angels = [];
-    foreach ($shift->shiftEntries as $shift_entry) {
+    foreach ($shift->shiftEntries->sortBy('user.name', SORT_STRING | SORT_FLAG_CASE) as $shift_entry) {
         if ($shift_entry->angel_type_id == $needed_angeltype['angel_type_id']) {
             $angels[] = Shift_view_render_shift_entry(
                 $shift_entry,

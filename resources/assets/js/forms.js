@@ -154,7 +154,7 @@ ready(() => {
   document.querySelectorAll('input[type="radio"]').forEach((radioElement) => {
     // build selector and get all corresponding elements for this input-radio
     const selector = DISABLE_ELEMENTS.map(
-      (tagName) => `${tagName}[data-radio-name="${radioElement.name}"][data-radio-value]`
+      (tagName) => `${tagName}[data-radio-name="${radioElement.name}"][data-radio-value]`,
     ).join(',');
     const elements = Array.from(document.querySelectorAll(selector));
 
@@ -224,7 +224,6 @@ ready(() => {
       dayElements.forEach((dayElement) => {
         if (dayElement.value === yyyyMMDD) {
           daySelector.value = dayElement.value;
-          return false;
         }
       });
     });
@@ -240,6 +239,7 @@ ready(() => {
       allowHTML: true,
       shouldSort: false,
       shouldSortItems: false,
+      removeItemButton: element.multiple,
       classNames: {
         containerInner: 'choices__inner form-control',
       },
@@ -260,6 +260,7 @@ ready(() => {
  * Init Bootstrap Popover
  */
 ready(() => {
+  // biome-ignore lint/suspicious/useIterableCallbackReturn: ...
   document.querySelectorAll('[data-bs-toggle="popover"]').forEach((element) => new bootstrap.Popover(element));
 });
 
@@ -267,6 +268,7 @@ ready(() => {
  * Init Bootstrap Tooltips
  */
 ready(() => {
+  // biome-ignore lint/suspicious/useIterableCallbackReturn: ...
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => new bootstrap.Tooltip(element));
 });
 
@@ -274,6 +276,7 @@ ready(() => {
  * Init Bootstrap Modals
  */
 ready(() => {
+  // biome-ignore lint/suspicious/useIterableCallbackReturn: ...
   document.querySelectorAll('.modal').forEach((element) => new bootstrap.Modal(element));
 });
 
@@ -287,72 +290,75 @@ ready(() => {
  * The class, title and content of the requesting button gets copied for confirmation
  *
  */
-ready(() => {
-  document.querySelectorAll('[data-confirm_submit_title], [data-confirm_submit_text]').forEach((element) => {
-    let modalOpen = false;
-    let oldType = element.type;
-    if (element.type !== 'submit') {
+const confirmationModal = (element) => {
+  let modalOpen = false;
+  const oldType = element.type;
+  if (element.type !== 'submit') {
+    return;
+  }
+
+  element.type = 'button';
+  element.addEventListener('click', (event) => {
+    if (modalOpen) {
       return;
     }
+    event.preventDefault();
 
-    element.type = 'button';
-    element.addEventListener('click', (event) => {
-      if (modalOpen) {
-        return;
-      }
-      event.preventDefault();
-
-      document.getElementById('confirmation-modal')?.remove();
-      document.body.insertAdjacentHTML(
-        'beforeend',
-        `
-          <div class="modal" tabindex="-1" id="confirmation-modal">
-            <div class="modal-dialog">
-              <div class="modal-content ${document.body.dataset.theme_type === 'light' ? 'bg-white' : 'bg-dark'}">
-                <div class="modal-header">
-                  <h5 class="modal-title">${element.dataset.confirm_submit_title ?? ''}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body${element.dataset.confirm_submit_text ? '' : ' d-none'}">
-                  <p>${element.dataset.confirm_submit_text ?? ''}</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="${element.className}"
-                    autofocus
-                    title="${element.title}" data-submit="">
-                    ${element.dataset.confirm_button_text ?? element.innerHTML}
-                  </button>
-                </div>
+    document.getElementById('confirmation-modal')?.remove();
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      `
+        <div class="modal" tabindex="-1" id="confirmation-modal">
+          <div class="modal-dialog">
+            <div class="modal-content ${document.body.dataset.theme_type === 'light' ? 'bg-white' : 'bg-dark'}">
+              <div class="modal-header">
+                <h5 class="modal-title">${element.dataset.confirm_submit_title ?? ''}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body${element.dataset.confirm_submit_text ? '' : ' d-none'}">
+                <p>${element.dataset.confirm_submit_text ?? ''}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="${element.className}"
+                  autofocus
+                  title="${element.title}" data-submit="">
+                  ${element.dataset.confirm_button_text ?? element.innerHTML}
+                </button>
               </div>
             </div>
           </div>
-        `
-      );
+        </div>
+      `,
+    );
 
-      const modal = document.getElementById('confirmation-modal');
-      modal.addEventListener('hide.bs.modal', () => {
-        modalOpen = false;
-      });
-
-      const modalSubmitButton = modal.querySelector('[data-submit]');
-      modalSubmitButton.addEventListener('click', () => {
-        element.type = oldType;
-        element.click();
-      });
-
-      /**
-       * After the modal has been shown, focus on the "Submit" button in the modal
-       * so that it can be confirmed with "Enter".
-       */
-      modal.addEventListener('shown.bs.modal', () => {
-        modalSubmitButton.focus();
-      });
-
-      modalOpen = true;
-      let bootstrapModal = new bootstrap.Modal(modal);
-      bootstrapModal.show();
+    const modal = document.getElementById('confirmation-modal');
+    const bootstrapModal = new bootstrap.Modal(modal);
+    modal.addEventListener('hide.bs.modal', () => {
+      modalOpen = false;
     });
+
+    const modalSubmitButton = modal.querySelector('[data-submit]');
+    modalSubmitButton.addEventListener('click', () => {
+      element.type = oldType;
+      element.click();
+      bootstrapModal.hide();
+    });
+
+    /**
+     * After the modal has been shown, focus on the "Submit" button in the modal
+     * so that it can be confirmed with "Enter".
+     */
+    modal.addEventListener('shown.bs.modal', () => {
+      modalSubmitButton.focus();
+    });
+
+    modalOpen = true;
+    bootstrapModal.show();
   });
+};
+
+ready(() => {
+  document.querySelectorAll('[data-confirm_submit_title], [data-confirm_submit_text]').forEach(confirmationModal);
 });
 
 /**
@@ -379,21 +385,48 @@ ready(() => {
  */
 ready(() => {
   const collapseElement = document.getElementById('collapseShiftsFilterSelect');
-  if (collapseElement) {
-    if (localStorage.getItem('collapseShiftsFilterSelect') === 'hidden.bs.collapse') {
-      collapseElement.classList.remove('show');
-    }
-
-    /**
-     * @param {Event} event
-     */
-    const onChange = (event) => {
-      localStorage.setItem('collapseShiftsFilterSelect', event.type);
-    };
-
-    collapseElement.addEventListener('hidden.bs.collapse', onChange);
-    collapseElement.addEventListener('shown.bs.collapse', onChange);
+  if (!collapseElement) {
+    return;
   }
+
+  const showMoreLess = document.getElementById('showMoreLess');
+  showMoreLess.addEventListener('click', (e) => {
+    const heightLimited = document.querySelectorAll('#collapseShiftsFilterSelect .selection.limit-height');
+    if (heightLimited.length > 0) {
+      // biome-ignore lint/suspicious/useIterableCallbackReturn: ...
+      heightLimited.forEach((e) => e.classList.remove('limit-height'));
+      localStorage.setItem('collapseShiftsFilterExpand', 'opened');
+      collapseElement.classList.add('show');
+    } else {
+      document
+        .querySelectorAll('#collapseShiftsFilterSelect .selection')
+        // biome-ignore lint/suspicious/useIterableCallbackReturn: ...
+        .forEach((e) => e.classList.add('limit-height'));
+      localStorage.setItem('collapseShiftsFilterExpand', 'closed');
+    }
+    e.preventDefault();
+  });
+
+  if (localStorage.getItem('collapseShiftsFilterSelect') === 'hide.bs.collapse') {
+    collapseElement.classList.remove('show');
+  }
+
+  if (localStorage.getItem('collapseShiftsFilterExpand') === 'opened') {
+    document
+      .querySelectorAll('#collapseShiftsFilterSelect .selection.limit-height')
+      // biome-ignore lint/suspicious/useIterableCallbackReturn: ...
+      .forEach((e) => e.classList.remove('limit-height'));
+  }
+
+  /**
+   * @param {Event} event
+   */
+  const onChange = (event) => {
+    localStorage.setItem('collapseShiftsFilterSelect', event.type);
+  };
+
+  collapseElement.addEventListener('hide.bs.collapse', onChange);
+  collapseElement.addEventListener('show.bs.collapse', onChange);
 });
 
 /**
@@ -420,6 +453,70 @@ ready(() => {
   elements.forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
+    });
+  });
+});
+
+/**
+ * focus select at user angel types add action
+ */
+ready(() => {
+  document.querySelectorAll('#form_user_angel_type_add_user_id').forEach((element) => {
+    const innerDiv = element.choices.containerOuter.element;
+    if (innerDiv) {
+      innerDiv.focus();
+    }
+  });
+});
+
+/**
+ * Live reload arrive stead instead of submitting form
+ */
+ready(() => {
+  document.querySelectorAll('form.arrive_form').forEach((element) => {
+    element.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const form = e.target;
+      const row = form.parentElement.parentElement;
+      const name = row.querySelector('.column_name a');
+      const arrived = row.querySelector('.column_arrived');
+      const arrival = row.querySelector('.column_rendered_arrival_date');
+      const button = form.querySelector('[name="send"]');
+      const data = new FormData(e.target);
+      data.append('send', '!');
+
+      const response = await fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'X-CSRF-TOKEN': data.get('_token'),
+        },
+        body: data,
+      });
+
+      if (!response.ok) {
+        console.warn('Broken response, submitting form anyways');
+        form.submit();
+        return;
+      }
+
+      const body = await response.json();
+      arrival.innerText = body.arrival_date;
+      const newButton = new DOMParser().parseFromString(body.button, 'text/html').body.firstChild;
+      button.replaceWith(newButton);
+
+      if (body.state === 'arrived') {
+        name.classList.remove('text-muted');
+        arrived.innerHTML = '<span class="text-success"><span class="bi bi-check-lg"></span></span>';
+        form.querySelector('[name="action"]').value = 'reset';
+        confirmationModal(newButton);
+      } else {
+        name.classList.add('text-muted');
+        arrived.innerHTML = '<span class="text-danger"><span class="bi bi-x-lg"></span></span>';
+        form.querySelector('[name="action"]').value = 'arrived';
+      }
     });
   });
 });

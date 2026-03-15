@@ -15,8 +15,9 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property int         $id
  * @property int         $creator_id
  * @property float       $hours
- * @property string      $comment
+ * @property string      $description
  * @property Carbon      $worked_at
+ * @property bool        $night_shift
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
@@ -26,7 +27,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @method static QueryBuilder|Worklog[] whereCreatorId($value)
  * @method static QueryBuilder|Worklog[] whereWorkedAt($value)
  * @method static QueryBuilder|Worklog[] whereHours($value)
- * @method static QueryBuilder|Worklog[] whereComment($value)
+ * @method static QueryBuilder|Worklog[] whereDescription($value)
  */
 class Worklog extends BaseModel
 {
@@ -38,10 +39,11 @@ class Worklog extends BaseModel
 
     /** @var array<string, string> */
     protected $casts = [ // phpcs:ignore
-        'user_id'    => 'integer',
-        'creator_id' => 'integer',
-        'hours'      => 'float',
-        'worked_at'  => 'datetime',
+        'user_id'     => 'integer',
+        'creator_id'  => 'integer',
+        'hours'       => 'float',
+        'worked_at'   => 'datetime',
+        'night_shift' => 'boolean',
     ];
 
     /**
@@ -53,8 +55,9 @@ class Worklog extends BaseModel
         'user_id',
         'creator_id',
         'hours',
-        'comment',
+        'description',
         'worked_at',
+        'night_shift',
     ];
 
     public function creator(): BelongsTo

@@ -70,7 +70,7 @@ class User
     private function isRequired(string $key): string
     {
         $requiredFields = $this->config->get('required_user_fields');
-        return $requiredFields[$key] ? 'required' : 'optional';
+        return in_array($key, $requiredFields) ? 'required' : 'optional';
     }
 
     /**
@@ -275,7 +275,6 @@ class User
         $state = new State([]);
 
         if ($this->config->get('autoarrive')) {
-            $state->arrived = true;
             $state->arrival_date = CarbonImmutable::now();
         }
 
@@ -301,6 +300,15 @@ class User
             $this->session->remove('oauth2_access_token');
             $this->session->remove('oauth2_refresh_token');
             $this->session->remove('oauth2_expires_at');
+
+            $this->logger->info(
+                '{user} connected OAuth user {oauth_user} using {provider}',
+                [
+                    'provider' => $oauth->provider,
+                    'user' => sprintf('%s (%u)', $user->displayName, $user->id),
+                    'oauth_user' => $oauth->identifier,
+                ]
+            );
         }
 
         $defaultGroup = Group::find($this->authenticator->getDefaultRole());

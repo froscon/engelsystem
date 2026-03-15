@@ -27,6 +27,7 @@ class ControllerTest extends TestCase
      * @covers \Engelsystem\Controllers\Metrics\Controller::__construct
      * @covers \Engelsystem\Controllers\Metrics\Controller::metrics
      * @covers \Engelsystem\Controllers\Metrics\Controller::formatStats
+     * @covers \Engelsystem\Controllers\Metrics\Controller::checkAuth
      */
     public function testMetrics(): void
     {
@@ -172,8 +173,8 @@ class ControllerTest extends TestCase
             'XL' => 'X Large',
         ]);
         $config->set('locales', [
-            'de_DE' => 'German',
-            'en_US' => 'US English',
+            'de_DE',
+            'en_US',
         ]);
         $config->set('themes', [
             0 => ['name' => 'Nothing'],
@@ -191,52 +192,6 @@ class ControllerTest extends TestCase
 
         $controller = new Controller($response, $engine, $config, $request, $stats, $version);
         $controller->metrics();
-    }
-
-    /**
-     * @covers \Engelsystem\Controllers\Metrics\Controller::checkAuth
-     * @covers \Engelsystem\Controllers\Metrics\Controller::stats
-     */
-    public function testStats(): void
-    {
-        /** @var Response|MockObject $response */
-        /** @var Request|MockObject $request */
-        /** @var MetricsEngine|MockObject $engine */
-        /** @var Stats|MockObject $stats */
-        /** @var Config $config */
-        /** @var Version|MockObject $version */
-        list($response, $request, $engine, $stats, $config, $version) = $this->getMocks();
-
-        $response->expects($this->once())
-            ->method('withHeader')
-            ->with('Content-Type', 'application/json')
-            ->willReturn($response);
-        $response->expects($this->once())
-            ->method('withContent')
-            ->with(json_encode([
-                'user_count'         => 20,
-                'arrived_user_count' => 10,
-                'done_work_hours'    => 99,
-                'users_in_action'    => 5,
-            ]))
-            ->willReturn($response);
-
-        $request->expects($this->once())
-            ->method('get')
-            ->with('api_key')
-            ->willReturn('ApiKey987');
-
-        $config->set('api_key', 'ApiKey987');
-
-        $stats->expects($this->once())
-            ->method('workSeconds')
-            ->with(true)
-            ->willReturn((int) (60 * 60 * 99.47));
-        $this->setExpects($stats, 'usersState', null, 10, $this->exactly(3));
-        $this->setExpects($stats, 'currentlyWorkingUsers', null, 5);
-
-        $controller = new Controller($response, $engine, $config, $request, $stats, $version);
-        $controller->stats();
     }
 
     /**
@@ -262,8 +217,8 @@ class ControllerTest extends TestCase
         $controller = new Controller($response, $engine, $config, $request, $stats, $version);
 
         $this->expectException(HttpForbidden::class);
-        $this->expectExceptionMessage(json_encode(['error' => 'The api_key is invalid']));
-        $controller->stats();
+        $this->expectExceptionMessage('The api_key is invalid');
+        $controller->metrics();
     }
 
     protected function getMocks(): array

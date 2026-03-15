@@ -6,6 +6,7 @@ use Engelsystem\Models\AngelType;
 use Engelsystem\Models\Location;
 use Engelsystem\Models\Shifts\NeededAngelType;
 use Engelsystem\Models\Shifts\Shift;
+use Engelsystem\Models\Tag;
 use Engelsystem\Models\UserAngelType;
 use Engelsystem\ShiftsFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -56,15 +57,24 @@ function update_ShiftsFilter_timerange(ShiftsFilter $shiftsFilter, $days)
 {
     $start_time = $shiftsFilter->getStartTime();
     if (is_null($start_time)) {
-        $now = (new DateTime())->format('Y-m-d');
-        $first_day = DateTime::createFromFormat(
-            'Y-m-d',
-            in_array($now, $days) ? $now : ($days[0] ?? (new DateTime())->format('Y-m-d'))
-        )->getTimestamp();
-        if (time() < $first_day) {
-            $start_time = $first_day;
+        $now = new DateTime();
+        $today = $now->format('Y-m-d');
+        if (in_array($today, $days)) {
+            // Today has shifts, use current time
+            $start_time = $now->getTimestamp();
+        } elseif (!empty($days)) {
+            // Today has no shifts, find the next upcoming day with shifts
+            $selectedDay = $days[0];
+            foreach ($days as $day) {
+                if ($day >= $today) {
+                    $selectedDay = $day;
+                    break;
+                }
+            }
+            $start_time = DateTime::createFromFormat('Y-m-d', $selectedDay)->getTimestamp();
         } else {
-            $start_time = time();
+            // No days with shifts at all
+            $start_time = $now->getTimestamp();
         }
     }
 
@@ -109,6 +119,8 @@ function update_ShiftsFilter(ShiftsFilter $shiftsFilter, $user_shifts_admin, $da
     $shiftsFilter->setFilled(check_request_int_array('filled', $shiftsFilter->getFilled()));
     $shiftsFilter->setLocations(check_request_int_array('locations', $shiftsFilter->getLocations()));
     $shiftsFilter->setTypes(check_request_int_array('types', $shiftsFilter->getTypes()));
+    $tag = request()->input('tag', $shiftsFilter->getTag());
+    $shiftsFilter->setTag(is_numeric($tag) ? $tag : null);
     update_ShiftsFilter_timerange($shiftsFilter, $days);
 }
 
@@ -194,7 +206,14 @@ function load_types()
                         NOT `user_angel_type`.`confirm_user_id` IS NULL
                         OR `user_angel_type`.`id` IS NULL
                     )
-                ) AS `enabled`
+                ) AS `enabled`,
+                (
+                    `user_angel_type`.`id` IS NOT NULL
+                    AND (
+                        `angel_types`.`restricted`=0
+                        OR `user_angel_type`.`confirm_user_id` IS NOT NULL
+                    )
+                ) AS `own`
             FROM `angel_types`
             LEFT JOIN `user_angel_type`
                 ON (
@@ -204,7 +223,7 @@ function load_types()
             . ($isShico ? '' :
             'WHERE angel_types.hide_on_shift_view = 0
                 OR user_angel_type.user_id IS NOT NULL ') .
-            'ORDER BY `angel_types`.`name`
+            'ORDER BY `own` DESC, `angel_types`.`name`
         ',
         [
             $user->id,
@@ -296,7 +315,23 @@ function view_user_shifts()
         return dateWithEventDay(Carbon::make($value)->format('Y-m-d'));
     })->toArray();
 
-    $link = button(url('/admin-shifts'), icon('plus-lg'), 'add');
+    $link = button(url('/admin-shifts'), icon('plus-lg'), 'btn-sm add');
+
+    $tagId = $shiftsFilter->getTag();
+    $tags = PHP_EOL;
+    foreach (Tag::whereHas('shifts')->get() as $tag) {
+        $active = $tag->id == $shiftsFilter->getTag();
+        $bg = $active ? 'danger' : 'secondary';
+        $tags .=
+            ' '
+            . '<a href="' . url(request()->getPathInfo(), [...request()->getQueryParams(), 'tag' => $active ? '' : $tag->id]) . '">'
+            . '<span class="badge bg-' . $bg . '">'
+            . $tag->name
+            . ($active ? ' <span class="bi bi-x-lg"></span>' : '')
+            . '</span>'
+            . '</a>' . PHP_EOL;
+    }
+    $tags .= PHP_EOL;
 
     return page([
         div('col-md-12', [
@@ -307,7 +342,9 @@ function view_user_shifts()
                     $locations,
                     $shiftsFilter->getLocations(),
                     'locations',
-                    icon('pin-map-fill') . __('location.locations')
+                    icon('pin-map-fill') . __('location.locations'),
+                    [],
+                    'limit-height',
                 ),
                 'start_select'  => html_select_key(
                     'start_day',
@@ -330,18 +367,25 @@ function view_user_shifts()
                     icon('person-lines-fill') . __('angeltypes.angeltypes') . ' '
                     . '<a class="icon-link" href="' . url('/angeltypes/about') . '" title="' . __('angeltypes.about') . '" target="_blank">'
                     . icon('question-circle') . '</a>',
-                    $ownAngelTypes
+                    $ownAngelTypes,
+                    'limit-height',
                 ),
                 'filled_select' => make_select(
                     $filled,
                     $shiftsFilter->getFilled(),
                     'filled',
-                    icon('person-fill-slash') . __('Occupancy')
+                    icon('person-fill-slash') . __('Occupancy'),
+                    [],
+                    'limit-height',
                 ),
-                'shifts_table'  => msg() . $shiftCalendarRenderer->render(),
+                'tags'  => $tags,
+                'msg'  => msg(),
+                'tag_id'  => $tagId,
+                'shifts_table'  => $shiftCalendarRenderer->render(),
                 'ical_text'     => div('mt-3', ical_hint()),
                 'filter'        => __('Filter'),
                 'filter_toggle' => __('shifts.filter.toggle'),
+                'expand_toggle_title' => __('shifts.toggle.title'),
                 'set_yesterday' => __('Yesterday'),
                 'set_today'     => __('Today'),
                 'set_tomorrow'  => __('Tomorrow'),
@@ -392,7 +436,7 @@ function ical_hint()
  * @param int[]  $ownSelect
  * @return string
  */
-function make_select($items, $selected, $name, $title = null, $ownSelect = [])
+function make_select($items, $selected, $name, $title = null, $ownSelect = [], $class = '')
 {
     $html = '';
     if (isset($title)) {
@@ -408,17 +452,19 @@ function make_select($items, $selected, $name, $title = null, $ownSelect = [])
     }
 
     $html .= buttons($buttons);
-    $html .= '<div id="selection_' . $name . '" class="mb-3 selection ' . $name . '">' . "\n";
+    $html .= '<div id="selection_' . $name . '" class="mb-3 selection ' . $name . ' ' . $class . '">' . "\n";
 
     $htmlItems = [];
-    foreach ($items as $i) {
-        $id = $name . '_' . $i['id'];
+    foreach ($items as $i => $item) {
+        $break = isset($item['own'], $items[$i + 1]) &&  $item['own'] && !$items[$i + 1]['own'];
+        $id = $name . '_' . $item['id'];
         $htmlItems[] = '<div class="form-check">'
-            . '<input class="form-check-input" type="checkbox" id="' . $id . '" name="' . $name . '[]" value="' . $i['id'] . '" '
-            . (in_array($i['id'], $selected) ? ' checked="checked"' : '')
-            . '><label class="form-check-label" for="' . $id . '">' . htmlspecialchars($i['name']) . '</label>'
-            . (!isset($i['enabled']) || $i['enabled'] ? '' : icon('mortarboard-fill'))
-            . '</div>';
+            . '<input class="form-check-input" type="checkbox" id="' . $id . '" name="' . $name . '[]" value="' . $item['id'] . '" '
+            . (in_array($item['id'], $selected) ? ' checked="checked"' : '')
+            . '><label class="form-check-label" for="' . $id . '">' . htmlspecialchars($item['name']) . '</label>'
+            . (!isset($item['enabled']) || $item['enabled'] ? '' : icon('mortarboard-fill'))
+            . '</div>'
+            . ($break ? '<hr class="border border-info border-2 opacity-75" id="angel_types_selection_hr">' : '');
     }
     $html .= implode("\n", $htmlItems);
 

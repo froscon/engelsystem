@@ -49,7 +49,14 @@ class UserWorklogController extends BaseController
             if ($worklog->user->id != $user->id) {
                 throw new HttpNotFound();
             }
-            return $this->showEditWorklog($user, $worklog->worked_at, $worklog->hours, $worklog->comment, true);
+            return $this->showEditWorklog(
+                $user,
+                $worklog->worked_at,
+                $worklog->hours,
+                $worklog->description,
+                $worklog->night_shift,
+                true
+            );
         } else {
             return $this->showEditWorklog($user, Carbon::today());
         }
@@ -63,7 +70,8 @@ class UserWorklogController extends BaseController
         $data = $this->validate($request, [
             'work_date' => 'required|date:Y-m-d',
             'work_hours' => 'float|min:0',
-            'comment' => 'required|max:200',
+            'description' => 'required|max:200',
+            'night_shift' => 'optional|checked',
         ]);
 
         // Search / create worklog
@@ -80,18 +88,20 @@ class UserWorklogController extends BaseController
         }
         $worklog->worked_at = $data['work_date'];
         $worklog->hours = $data['work_hours'];
-        $worklog->comment = $data['comment'];
+        $worklog->description = $data['description'];
+        $worklog->night_shift = $data['night_shift'] ?: false;
         $worklog->save();
 
         $this->log->info(
-            'Saved worklog ({wl_id}) for {name} ({id}) at {time} spanning {hours}h: {text}',
+            'Saved worklog ({wl_id}) for {name} ({id}) at {time} spanning {hours}h{night_shift}: {text}',
             [
                 'wl_id' => $worklog->id,
                 'name' => $user->name,
                 'id' => $user->id,
                 'time' => $worklog->worked_at,
                 'hours' => $worklog->hours,
-                'text' => $worklog->comment,
+                'text' => $worklog->description,
+                'night_shift' => $worklog->night_shift ? ' at night' : '',
             ]
         );
         $this->addNotification(isset($worklogId) ? 'worklog.edit.success' : 'worklog.add.success');
@@ -128,14 +138,15 @@ class UserWorklogController extends BaseController
         $worklog->delete();
 
         $this->log->info(
-            'Deleted worklog ({wl_id}) for {name} ({id}) at {time} spanning {hours}h: {text}',
+            'Deleted worklog ({wl_id}) for {name} ({id}) at {time} spanning {hours}h{night_shift}: {text}',
             [
                 'wl_id' => $worklog->id,
                 'name' => $worklog->user->name,
                 'id' => $worklog->user->id,
                 'time' => $worklog->worked_at,
                 'hours' => $worklog->hours,
-                'text' => $worklog->comment,
+                'text' => $worklog->description,
+                'night_shift' => $worklog->night_shift ? ' at night' : '',
             ]
         );
         $this->addNotification('worklog.delete.success');
@@ -148,7 +159,8 @@ class UserWorklogController extends BaseController
         User $user,
         Carbon $work_date,
         float $work_hours = 0,
-        string $comment = '',
+        string $description = '',
+        bool $night_shift = false,
         bool $is_edit = false
     ): Response {
         return $this->response->withView(
@@ -157,7 +169,8 @@ class UserWorklogController extends BaseController
                 'userdata' => $user,
                 'work_date' => $work_date,
                 'work_hours' => $work_hours,
-                'comment' => $comment,
+                'description' => $description,
+                'night_shift' => $night_shift,
                 'is_edit' => $is_edit,
             ]
         );

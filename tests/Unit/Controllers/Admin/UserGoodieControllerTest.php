@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Engelsystem\Test\Unit\Controllers\Admin;
 
+use Carbon\Carbon;
 use Engelsystem\Config\GoodieType;
 use Engelsystem\Controllers\Admin\UserGoodieController;
 use Engelsystem\Helpers\Authenticator;
@@ -29,7 +30,9 @@ class UserGoodieControllerTest extends ControllerTest
      */
     public function testIndex(): void
     {
+        $this->mockTranslator();
         $this->config->set('goodie_type', GoodieType::Tshirt->value);
+        $this->config->set('night_shifts', ['enabled' => false]);
         $request = $this->request->withAttribute('user_id', 1);
         /** @var Authenticator|MockObject $auth */
         $auth = $this->createMock(Authenticator::class);
@@ -124,11 +127,11 @@ class UserGoodieControllerTest extends ControllerTest
             ->create();
 
         $auth
-            ->expects($this->exactly(5))
+            ->expects($this->exactly(6))
             ->method('can')
             ->with('admin_arrive')
-            ->willReturnOnConsecutiveCalls(true, true, false, false, true);
-        $this->setExpects($redirector, 'back', null, $this->response, $this->exactly(5));
+            ->willReturnOnConsecutiveCalls(true, true, false, false, true, true);
+        $this->setExpects($redirector, 'back', null, $this->response, $this->exactly(6));
 
         $controller = new UserGoodieController(
             $auth,
@@ -190,7 +193,7 @@ class UserGoodieControllerTest extends ControllerTest
                 'arrived'    => '1',
             ]);
 
-        $user->state->arrived = false;
+        $user->state->arrival_date = null;
         $user->state->save();
         $this->assertFalse($user->state->arrived);
         $controller->saveGoodie($request);
@@ -218,6 +221,19 @@ class UserGoodieControllerTest extends ControllerTest
         $controller->saveGoodie($request);
         $user = User::find(1);
         $this->assertEquals('XS', $user->personalData->shirt_size);
+
+        // remove arrived
+        $user->state->arrival_date = Carbon::now();
+        $user->state->save();
+        $request = $request
+            ->withParsedBody([
+                'shirt_size' => 'XS',
+                'arrived'    => '',
+            ]);
+
+        $controller->saveGoodie($request);
+        $user = User::find(1);
+        $this->assertFalse($user->state->arrived);
     }
 
     /**

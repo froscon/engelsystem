@@ -104,6 +104,7 @@ class Controller extends BaseController
             ],
             'users_info' => ['type' => 'gauge', $this->stats->usersInfo()],
             'users_force_active'   => ['type' => 'gauge', $this->stats->forceActiveUsers()],
+            'users_force_food'   => ['type' => 'gauge', $this->stats->forceFoodUsers()],
             'users_pronouns'     => ['type' => 'gauge', $this->stats->usersPronouns()],
             'licenses'             => [
                 'type' => 'gauge',
@@ -234,41 +235,17 @@ class Controller extends BaseController
             ->withContent($this->engine->get('/metrics', $data));
     }
 
-    public function stats(): Response
-    {
-        $this->checkAuth(true);
-
-        $data = [
-            'user_count'         => $this->stats->usersState() + $this->stats->usersState(null, false),
-            'arrived_user_count' => $this->stats->usersState(),
-            'done_work_hours'    => round($this->stats->workSeconds(true) / 60 / 60),
-            'users_in_action'    => $this->stats->currentlyWorkingUsers(),
-        ];
-
-        return $this->response
-            ->withHeader('Content-Type', 'application/json')
-            ->withContent(json_encode($data));
-    }
-
     /**
      * Ensure that the request is authorized
      */
-    protected function checkAuth(bool $isJson = false): void
+    protected function checkAuth(): void
     {
         $apiKey = $this->config->get('api_key');
         if (empty($apiKey) || $this->request->get('api_key') == $apiKey) {
             return;
         }
 
-        $message = 'The api_key is invalid';
-        $headers = [];
-
-        if ($isJson) {
-            $message = json_encode(['error' => $message]);
-            $headers['Content-Type'] = 'application/json';
-        }
-
-        throw new HttpForbidden($message, $headers);
+        throw new HttpForbidden('The api_key is invalid');
     }
 
     /**
@@ -278,6 +255,10 @@ class Controller extends BaseController
     {
         $return = [];
         foreach ($this->config->get($config) as $name => $description) {
+            if (is_int($name) && $label) {
+                $name = $description;
+            }
+
             $count = $data->where($dataField, '=', $name)->sum('count');
             $return[] = [
                 'labels' => [($label ?: $dataField) => $name],

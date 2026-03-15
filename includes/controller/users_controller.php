@@ -1,6 +1,8 @@
 <?php
 
+use Carbon\CarbonInterval;
 use Engelsystem\Database\Db;
+use Engelsystem\Helpers\Carbon;
 use Engelsystem\Helpers\Goodie;
 use Engelsystem\Models\AngelType;
 use Engelsystem\Models\Shifts\ShiftEntry;
@@ -9,8 +11,8 @@ use Engelsystem\Models\User\User;
 use Engelsystem\ShiftCalendarRenderer;
 use Engelsystem\ShiftsFilter;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Route user actions.
@@ -188,7 +190,10 @@ function user_controller()
         auth()->resetApiKey($user_source);
     }
 
-    $goodie_score = sprintf('%.2f', Goodie::userScore($user_source)) . '&nbsp;h';
+    $goodie_score = Carbon::formatDuration(
+        CarbonInterval::minutes(round(Goodie::userScore($user_source) * 60)),
+        __('general.duration')
+    );
     if ($user_source->state->force_active && config('enable_force_active')) {
         $goodie_score = '<span title="' . $goodie_score . '">' . __('user.goodie_score.enough') . '</span>';
     }
@@ -244,52 +249,53 @@ function users_list_controller()
         throw_redirect(url('/'));
     }
 
+    // Map user-facing column names to actual database columns
+    $columnMap = [
+        'name' => 'users.name',
+        'first_name' => 'users_personal_data.first_name',
+        'last_name' => 'users_personal_data.last_name',
+        'dect' => 'users_contact.dect',
+        'arrived' => 'arrived',
+        'got_voucher' => 'users_state.got_voucher',
+        'active' => 'users_state.active',
+        'force_active' => 'users_state.force_active',
+        'force_food' => 'users_state.force_food',
+        'got_goodie' => 'users_state.got_goodie',
+        'shirt_size' => 'users_personal_data.shirt_size',
+        'planned_arrival_date' => 'users_personal_data.planned_arrival_date',
+        'planned_departure_date' => 'users_personal_data.planned_departure_date',
+        'last_login_at' => 'users.last_login_at',
+        'freeloads' => 'freeloads',
+    ];
+
     $order_by = 'name';
-    if (
-        $request->has('OrderBy') && in_array($request->input('OrderBy'), [
-            'name',
-            'first_name',
-            'last_name',
-            'dect',
-            'arrived',
-            'got_voucher',
-            'freeloads',
-            'active',
-            'force_active',
-            'got_goodie',
-            'shirt_size',
-            'planned_arrival_date',
-            'planned_departure_date',
-            'last_login_at',
-        ])
-    ) {
-        $order_by = $request->input('OrderBy');
+    if ($request->query->has('OrderBy') && array_key_exists($request->query->get('OrderBy'), $columnMap)) {
+        $order_by = $request->query->get('OrderBy');
     }
+    $orderDirection = in_array($order_by, ['name', 'first_name', 'last_name', 'dect', 'shirt_size']) ? 'asc' : 'desc';
 
-    /** @var User[]|Collection $users */
-    $users = User::with(['contact', 'personalData', 'state', 'shiftEntries' => function (HasMany $query) {
-        $query->whereNotNull('freeloaded_by');
-    }])
-        ->orderBy('name')
-        ->get();
-    foreach ($users as $user) {
-        $user->setAttribute(
-            'freeloads',
-            $user->shiftEntries
-                ->whereNotNull('freeloaded_by')
-                ->count()
-        );
+    $perPage = $request->query->get('c', config('display_users'));
+    if ($perPage == 'all') {
+        $perPage = PHP_INT_MAX;
     }
+    $perPage = is_numeric($perPage) ? (int) $perPage : config('display_users');
 
-    $users = $users->sortBy(function (User $user) use ($order_by) {
-        $userData = $user->toArray();
-        $data = [];
-        array_walk_recursive($userData, function ($value, $key) use (&$data) {
-            $data[$key] = $value;
-        });
-
-        return isset($data[$order_by]) ? Str::lower($data[$order_by]) : null;
-    });
+    /** @var User[]|Collection|LengthAwarePaginator $users */
+    $users = User::with(['contact', 'personalData', 'state'])
+        ->select('users.*')
+        ->leftJoin('users_personal_data', 'users.id', '=', 'users_personal_data.user_id')
+        ->leftJoin('users_contact', 'users.id', '=', 'users_contact.user_id')
+        ->leftJoin('users_state', 'users.id', '=', 'users_state.user_id')
+        ->selectSub(
+            ShiftEntry::selectRaw('COUNT(*)')
+                ->whereColumn('shift_entries.user_id', 'users.id')
+                ->whereNotNull('shift_entries.freeloaded_by'),
+            'freeloads'
+        )
+        ->addSelect(['arrived' => fn(Builder $q) => $q->select($q->raw('users_state.arrival_date is not null'))])
+        ->orderBy($columnMap[$order_by], $orderDirection)
+        ->orderBy('users.name')
+        ->paginate($perPage);
 
     return [
         __('All users'),
@@ -299,6 +305,7 @@ function users_list_controller()
             State::whereArrived(true)->count(),
             State::whereActive(true)->count(),
             State::whereForceActive(true)->count(),
+            State::whereForceFood(true)->count(),
             ShiftEntry::whereNotNull('freeloaded_by')->count(),
             State::whereGotGoodie(true)->count(),
             State::query()->sum('got_voucher'),
@@ -374,10 +381,8 @@ function shiftCalendarRendererByShiftFilter(ShiftsFilter $shiftsFilter)
         foreach ($needed_angeltypes[$shift->id] as $needed_angeltype) {
             $taken = 0;
 
-            if (
-                !in_array(ShiftsFilter::FILLED_FILLED, $shiftsFilter->getFilled())
-                && !in_array($needed_angeltype['angel_type_id'], $shiftsFilter->getTypes())
-            ) {
+            // Only count slots for angel types the user has selected
+            if (!in_array($needed_angeltype['angel_type_id'], $shiftsFilter->getTypes())) {
                 continue;
             }
 
