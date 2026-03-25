@@ -2,7 +2,7 @@
 docker/
 !docker/entrypoint.sh
 !docker/nginx.conf
-!docker/backup.crontab
+!docker/backup.*
 
 # Configuration
 config/config.php
