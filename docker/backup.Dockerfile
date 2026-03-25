@@ -1,10 +1,11 @@
 FROM mariadb:10.7
 
-COPY docker/backup.crontab /root/crontab
-
 RUN apt update && \
     apt install -y cron strace && \
-    crontab /root/crontab && \
     mkdir /backup
 
-ENTRYPOINT /usr/sbin/cron -f -L 7
+COPY docker/backup.hourly /etc/cron.hourly/backup
+COPY docker/backup.daily /etc/cron.daily/backup
+COPY docker/backup.weekly /etc/cron.weekly/backup
+
+ENTRYPOINT env >> /etc/environment && cron -f -l 2 > /proc/1/fd/1 2> /proc/1/fd/2
