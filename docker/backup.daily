@@ -1,0 +1,4 @@
+#!/bin/bash
+
+find /backup/ -type f -mtime +3 -name '*_hourly.sql' -delete
+find /backup/ -type f -mtime +15 -name '*_weekly.sql' -delete

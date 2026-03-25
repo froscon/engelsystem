@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mariadb-dump --host=${MYSQL_HOST} --skip-ssl --password=`cat ${MYSQL_ROOT_PASSWORD_FILE}` --all-databases --single-transaction > /backup/backup_`date +%Y-%m-%d-%H-%M`_weekly.sql
