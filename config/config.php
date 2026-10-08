@@ -46,7 +46,7 @@ return [
     'password_min_length' => 5,
     'footer_items' => [
         'faq.faq' => ['/faq', 'faq.view'],
-        'general.email' => ['mailto:helfen@froscon.org', 'general.email'],
+        'general.email' => 'mailto:helfen@froscon.org',
     ],
     'disabled_user_view_columns' => ['freeloads'],
     'headers'                 => [
