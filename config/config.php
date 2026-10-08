@@ -43,6 +43,8 @@ return [
     'email.from.name' => 'Helferinnensystem',
     'email.from.address' => 'helfen@froscon.org',
     'email.host' => 'mail.froscon.org',
+    'email.port' => 25,
+    'email.tls' => false,
     'password_min_length' => 5,
     'footer_items' => [
         'faq.faq' => ['/faq', 'faq.view'],
