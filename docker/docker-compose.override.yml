@@ -2,30 +2,10 @@
 services:
   es_server:
     environment:
-      MYSQL_HOST: es_database
-      MYSQL_USER: helferinnensystem
+      MYSQL_USER: "helferinnensystem"
       MYSQL_PASSWORD: ""
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
-      MYSQL_DATABASE: helferinnensystem
-      APP_NAME: Helferinnensystem
-      CONTACT_EMAIL: "mailto:helfen@froscon.org"
-      THEME: 0
-      TSHIRT_SIZE_REQUIRED: 'false'
-      SUPPORTERS_CAN_PROMOTE: 'true'
-      SIGNUP_POST_FRACTION: 1
-      PASSWORD_MINIMUM_LENGTH: 5
-      ENABLE_PLANNED_ARRIVAL: 'false'
-      ENABLE_FORCE_ACTIVE: 'false'
-      GOODIE_TYPE: 'none'
-      ENABLE_VOUCHER: 'false'
-      NIGHT_SHIFTS: 'false'
-      DRIVING_LICENSE_ENABLED: 'false'
-      IFSG_ENABLED: 'true'
-      IFSG_LIGHT_ENABLED: 'false'
-      DEFAULT_LOCALE: de_DE
-      MAIL_DRIVER: smtp
-      MAIL_FROM_ADDRESS: helfen@froscon.org
-      MAIL_HOST: mail.froscon.org
+      MYSQL_DATABASE: "helferinnensystem"
     restart: unless-stopped
     volumes:
       - ../config/config.php:/var/www/config/config.php:ro

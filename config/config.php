@@ -1,11 +1,56 @@
 <?php
 
 return [
-    // Hide columns in backend user view. Possible values are any sortable parameters of the table.
-    'disabled_user_view_columns' => ['freeloads', 'active', 'arrival_date', 'departure_date'],
 
-    // Predefined headers
-    // To disable a header in config.php, you can set its value to null
+    // event
+    'event_has_day0' => true,
+    'privacy_email' => 'helfen@froscon.org',
+
+    // features
+    'enable_dect' => true,
+    'enable_mobile_show' => false,
+    'enable_full_name' => true,
+    'display_full_name' => false,
+    'enable_pronoun' => true,
+    'required_user_fields' => [],
+    'enable_planned_arrival' => false,
+    'enable_force_active' => false,
+    'enable_voucher' => false,
+    'enable_force_food' => false,
+    'enable_self_worklog' => true,
+    'signup_requires_arrival' => false,
+    'autoarrive' => false,
+    'supporters_can_promote' => true,
+
+    // certificates
+    'driving_license_enabled' => false,
+    'ifsg_enabled' => true,
+    'ifsg_light_enabled' => false,
+
+    // shifts
+    'signup_post_fraction' => 1,
+
+    // goodie
+    'goodie_type' => 'none',
+    'night_shifts.enabled' => false,
+
+    // system
+    'app_name' => 'Helferinnensystem',
+    'default_locale' => 'de_DE',
+    'theme' => 0,
+    // password files are not supported here, still implemented in docker-compose.override.yml
+    'email.driver' => 'smtp',
+    'email.from.name' => 'Helferinnensystem',
+    'email.from.address' => 'helfen@froscon.org',
+    'email.host' => 'mail.froscon.org',
+    'email.port' => 25,
+    'email.tls' => false,
+    'password_min_length' => 5,
+    'footer_items' => [
+        'faq.faq' => ['/faq', 'faq.view'],
+        'general.email' => 'mailto:helfen@froscon.org',
+    ],
+    'disabled_user_view_columns' => ['freeloads'],
     'headers'                 => [
         'X-Content-Type-Options'  => 'nosniff',
         'X-Frame-Options'         => 'sameorigin',
