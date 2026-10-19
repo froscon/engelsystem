@@ -2,10 +2,51 @@
 services:
   es_server:
     environment:
+      # event
+      EVENT_HAS_DAY0: 'true'
+      PRIVACY_EMAIL: helfen@froscon.org
+      # features
+      ENABLE_DECT: 'true'
+      ENABLE_MOBILE_SHOW: 'false'
+      ENABLE_FULL_NAME: 'true'
+      DISPLAY_FULL_NAME: 'false'
+      ENABLE_PRONOUN: 'true'
+      REQUIRED_USER_FIELDS: ''
+      ENABLE_PLANNED_ARRIVAL: 'false'
+      ENABLE_FORCE_ACTIVE: 'false'
+      ENABLE_VOUCHER: 'false'
+      ENABLE_FORCE_FOOD: 'false'
+      ENABLE_SELF_WORKLOG: 'true'
+      SIGNUP_REQUIRES_ARRIVAL: 'false'
+      AUTOARRIVE: 'false'
+      SUPPORTERS_CAN_PROMOTE: 'true'
+      # certificates
+      DRIVING_LICENSE_ENABLED: 'false'
+      IFSG_ENABLED: 'true'
+      IFSG_LIGHT_ENABLED: 'false'
+      # shifts
+      SIGNUP_POST_FRACTION: 1
+      # goodie
+      GOODIE_TYPE: none
+      NIGHT_SHIFTS: 'false'
+      # system
+      APP_NAME: Helferinnensystem
+      DEFAULT_LOCALE: de_DE
+      THEME: 0
+      MYSQL_DATABASE: "helferinnensystem"
       MYSQL_USER: "helferinnensystem"
       MYSQL_PASSWORD: ""
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
-      MYSQL_DATABASE: "helferinnensystem"
+      MAIL_DRIVER: smtp
+      MAIL_FROM_NAME: Helferinnensystem
+      MAIL_FROM_ADDRESS: helfen@froscon.org
+      MAIL_HOST: mail.froscon.org
+      MAIL_PORT: 25
+      MAIL_TLS: 'false'
+      PASSWORD_MIN_LENGTH: 5
+      DISABLED_USER_VIEW_COLUMNS: freeloads
+      # config.php has settings that are too complex for environment variables
+
     restart: unless-stopped
     volumes:
       - ../config/config.php:/var/www/config/config.php:ro
